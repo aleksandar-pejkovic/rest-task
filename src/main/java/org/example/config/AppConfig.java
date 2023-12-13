@@ -1,12 +1,17 @@
 package org.example.config;
 
+import org.example.controller.TraineeController;
+import org.example.controller.TrainerController;
+import org.example.controller.TrainingController;
 import org.example.dao.TraineeDAO;
 import org.example.dao.TrainerDAO;
 import org.example.dao.TrainingDAO;
+import org.example.dao.TrainingTypeDAO;
 import org.example.facade.GymFacade;
 import org.example.service.TraineeService;
 import org.example.service.TrainerService;
 import org.example.service.TrainingService;
+import org.example.service.TrainingTypeService;
 import org.example.utils.CredentialsGenerator;
 import org.example.utils.UserAuthentication;
 import org.hibernate.SessionFactory;
@@ -44,6 +49,11 @@ public class AppConfig {
     }
 
     @Bean
+    public TrainingTypeDAO trainingTypeDAO(SessionFactory sessionFactory) {
+        return new TrainingTypeDAO(sessionFactory);
+    }
+
+    @Bean
     public TraineeService traineeService(TraineeDAO traineeDAO, CredentialsGenerator credentialsGenerator,
                                          UserAuthentication authentication) {
         return new TraineeService(traineeDAO, credentialsGenerator, authentication);
@@ -58,6 +68,26 @@ public class AppConfig {
     @Bean
     public TrainingService trainingService(TrainingDAO trainingDAO, UserAuthentication authentication) {
         return new TrainingService(trainingDAO, authentication);
+    }
+
+    @Bean
+    public TrainingTypeService trainingTypeService(TrainingTypeDAO trainingTypeDAO) {
+        return new TrainingTypeService(trainingTypeDAO);
+    }
+
+    @Bean
+    public TraineeController traineeController(TraineeService traineeService) {
+        return new TraineeController(traineeService);
+    }
+
+    @Bean
+    public TrainerController trainerController(TrainerService trainerService, TrainingTypeService trainingTypeService) {
+        return new TrainerController(trainerService, trainingTypeService);
+    }
+
+    @Bean
+    public TrainingController trainingController(TrainingService trainingService) {
+        return new TrainingController(trainingService);
     }
 
     @Bean

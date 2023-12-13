@@ -42,14 +42,14 @@ public class TraineeController {
                 .build();
     }
 
-    private static User buildNewUser(String firstName, String lastName) {
+    private User buildNewUser(String firstName, String lastName) {
         return User.builder()
                 .firstName(firstName)
                 .lastName(lastName)
                 .build();
     }
 
-    private static Trainee buildNewTrainee(Date dateOfBirth, String address, User newUser) {
+    private Trainee buildNewTrainee(Date dateOfBirth, String address, User newUser) {
         return Trainee.builder()
                 .dateOfBirth(dateOfBirth)
                 .address(address)

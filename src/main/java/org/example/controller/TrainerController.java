@@ -46,14 +46,14 @@ public class TrainerController {
                 .build();
     }
 
-    private static User buildNewUser(String firstName, String lastName) {
+    private User buildNewUser(String firstName, String lastName) {
         return User.builder()
                 .firstName(firstName)
                 .lastName(lastName)
                 .build();
     }
 
-    private static Trainer buildNewTrainer(User newUser, TrainingType specialization) {
+    private Trainer buildNewTrainer(User newUser, TrainingType specialization) {
         return Trainer.builder()
                 .user(newUser)
                 .specialization(specialization)
