@@ -5,9 +5,13 @@ import java.util.Date;
 import org.example.model.Trainee;
 import org.example.model.User;
 import org.example.response.CredentialsResponse;
+import org.example.response.TraineeResponse;
 import org.example.service.TraineeService;
+import org.example.utils.TraineeConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,6 +60,12 @@ public class TraineeController {
         } else {
             return ResponseEntity.badRequest().body(false);
         }
+    }
+
+    @GetMapping("/{username}")
+    public TraineeResponse getTraineeByUsername(@PathVariable String username) {
+        Trainee trainee = traineeService.getTraineeByUsername(username);
+        return TraineeConverter.convertToResponse(trainee);
     }
 
     private User buildNewUser(String firstName, String lastName) {
