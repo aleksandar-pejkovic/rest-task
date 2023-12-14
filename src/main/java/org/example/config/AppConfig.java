@@ -1,5 +1,6 @@
 package org.example.config;
 
+import org.example.controller.LoginController;
 import org.example.controller.TraineeController;
 import org.example.controller.TrainerController;
 import org.example.controller.TrainingController;
@@ -8,6 +9,7 @@ import org.example.dao.TrainerDAO;
 import org.example.dao.TrainingDAO;
 import org.example.dao.TrainingTypeDAO;
 import org.example.facade.GymFacade;
+import org.example.service.AuthenticationService;
 import org.example.service.TraineeService;
 import org.example.service.TrainerService;
 import org.example.service.TrainingService;
@@ -76,6 +78,11 @@ public class AppConfig {
     }
 
     @Bean
+    public AuthenticationService authenticationService(UserAuthentication userAuthentication) {
+        return new AuthenticationService(userAuthentication);
+    }
+
+    @Bean
     public TraineeController traineeController(TraineeService traineeService) {
         return new TraineeController(traineeService);
     }
@@ -88,6 +95,11 @@ public class AppConfig {
     @Bean
     public TrainingController trainingController(TrainingService trainingService) {
         return new TrainingController(trainingService);
+    }
+
+    @Bean
+    public LoginController loginController(AuthenticationService authenticationService) {
+        return new LoginController(authenticationService);
     }
 
     @Bean

@@ -1,11 +1,12 @@
 package org.example.utils;
 
-import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Slf4j
@@ -18,15 +19,17 @@ public class UserAuthentication {
         this.sessionFactory = sessionFactory;
     }
 
-    public void authenticateUser(String username, String password) {
+    public boolean authenticateUser(String username, String password) {
         if (!authenticate(username, password)) {
-            throw new RuntimeException("Authentication failed");
+            log.info("Authentication failed");
+            return false;
         } else {
             log.info("Successful user authentication");
+            return true;
         }
     }
 
-    private Boolean authenticate(String username, String password) {
+    private boolean authenticate(String username, String password) {
         try {
             Session session = sessionFactory.getCurrentSession();
             Query<Long> query = session.createQuery(

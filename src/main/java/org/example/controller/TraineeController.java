@@ -7,7 +7,9 @@ import org.example.model.User;
 import org.example.response.CredentialsResponse;
 import org.example.service.TraineeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,6 +42,20 @@ public class TraineeController {
                 .username(savedTrainee.getUsername())
                 .password(savedTrainee.getPassword())
                 .build();
+    }
+
+    @PutMapping("/change-login")
+    public ResponseEntity<Boolean> changeLogin(
+            @RequestParam String username,
+            @RequestParam String oldPassword,
+            @RequestParam String newPassword
+    ) {
+        Trainee traineeAfterUpdate = traineeService.changePassword(username, oldPassword, newPassword);
+        if (newPassword.equals(traineeAfterUpdate.getPassword())) {
+            return ResponseEntity.ok(true);
+        } else {
+            return ResponseEntity.badRequest().body(false);
+        }
     }
 
     private User buildNewUser(String firstName, String lastName) {
