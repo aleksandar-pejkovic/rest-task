@@ -16,6 +16,7 @@ public class TraineeConverter {
 
         return TraineeResponse.builder()
                 .id(entity.getId())
+                .username(entity.getUsername())
                 .firstName(entity.getUser().getFirstName())
                 .lastName(entity.getUser().getLastName())
                 .dateOfBirth(entity.getDateOfBirth())

@@ -75,6 +75,25 @@ public class TraineeController {
                 .build();
     }
 
+    @PutMapping
+    public TraineeResponse updateTraineeProfile(
+            @RequestParam String username,
+            @RequestParam String firstName,
+            @RequestParam String lastName,
+            @RequestParam(required = false) Date dateOfBirth,
+            @RequestParam(required = false) String address,
+            @RequestParam boolean isActive
+    ) {
+        Trainee trainee = traineeService.getTraineeByUsername(username);
+        trainee.getUser().setFirstName(firstName);
+        trainee.getUser().setLastName(lastName);
+        trainee.setDateOfBirth(dateOfBirth);
+        trainee.setAddress(address);
+        trainee.getUser().setActive(isActive);
+        Trainee updatedTrainee = traineeService.updateTrainee(trainee);
+        return TraineeConverter.convertToResponse(updatedTrainee);
+    }
+
     private Trainee buildNewTrainee(Date dateOfBirth, String address, User newUser) {
         return Trainee.builder()
                 .dateOfBirth(dateOfBirth)

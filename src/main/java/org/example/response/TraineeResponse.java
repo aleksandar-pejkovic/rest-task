@@ -12,6 +12,8 @@ public class TraineeResponse {
 
     private long id;
 
+    private String username;
+
     private String firstName;
 
     private String lastName;
