@@ -204,10 +204,9 @@ class TrainerServiceTest {
         when(trainerDAO.getNotAssignedTrainers(traineeUsername)).thenReturn(expectedTrainers);
 
         // Act
-        List<Trainer> result = trainerService.getNotAssignedTrainerList(traineeUsername, password);
+        List<Trainer> result = trainerService.getNotAssignedTrainerList(traineeUsername);
 
         // Assert
-        verify(userAuthentication, times(1)).authenticateUser(traineeUsername, password);
         verify(trainerDAO, times(1)).getNotAssignedTrainers(traineeUsername);
         assertEquals(expectedTrainers, result);
     }

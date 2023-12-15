@@ -32,7 +32,7 @@ class App {
         gymFacade.readTrainers();
         gymFacade.readTrainings();
         gymFacade.readTraineeTrainingList("Max.Biaggi", "1234567890", 50);
-        gymFacade.readNotAssignedTrainerList("Max.Biaggi", "1234567890");
+        gymFacade.readNotAssignedTrainerList("Max.Biaggi");
 
         context.close();
     }

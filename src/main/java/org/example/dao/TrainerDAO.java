@@ -57,7 +57,9 @@ public class TrainerDAO extends AbstractDAO<Trainer> {
 
         String hql = "SELECT t FROM Trainer t "
                 + "LEFT JOIN t.traineeList te "
-                + "WHERE te IS NULL OR te.user.username = :traineeUsername";
+                + "WHERE te IS NULL "
+                + "OR te.user.username = :traineeUsername "
+                + "AND t.user.isActive = true";
 
         Query<Trainer> query = session.createQuery(hql, Trainer.class);
         query.setParameter("traineeUsername", traineeUsername);

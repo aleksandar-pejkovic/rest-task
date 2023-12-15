@@ -2,11 +2,14 @@ package org.example.service;
 
 import java.util.List;
 
+import org.example.dao.TraineeDAO;
 import org.example.dao.TrainerDAO;
 import org.example.dao.TrainingTypeDAO;
 import org.example.dto.credentials.CredentialsUpdateDTO;
+import org.example.dto.trainer.TrainerListDTO;
 import org.example.dto.trainer.TrainerUpdateDTO;
 import org.example.enums.TrainingTypeName;
+import org.example.model.Trainee;
 import org.example.model.Trainer;
 import org.example.model.TrainingType;
 import org.example.model.User;
@@ -24,6 +27,8 @@ public class TrainerService {
 
     private final TrainerDAO trainerDAO;
 
+    private final TraineeDAO traineeDAO;
+
     private final CredentialsGenerator generator;
 
     private final UserAuthentication authentication;
@@ -31,8 +36,9 @@ public class TrainerService {
     private final TrainingTypeDAO trainingTypeDAO;
 
     @Autowired
-    public TrainerService(TrainerDAO trainerDAO, CredentialsGenerator credentialsGenerator, UserAuthentication authentication, TrainingTypeDAO trainingTypeDAO) {
+    public TrainerService(TrainerDAO trainerDAO, TraineeDAO traineeDAO, CredentialsGenerator credentialsGenerator, UserAuthentication authentication, TrainingTypeDAO trainingTypeDAO) {
         this.trainerDAO = trainerDAO;
+        this.traineeDAO = traineeDAO;
         this.generator = credentialsGenerator;
         this.authentication = authentication;
         this.trainingTypeDAO = trainingTypeDAO;
@@ -106,8 +112,7 @@ public class TrainerService {
     }
 
     @Transactional(readOnly = true)
-    public List<Trainer> getNotAssignedTrainerList(String traineeUsername, String password) {
-        authentication.authenticateUser(traineeUsername, password);
+    public List<Trainer> getNotAssignedTrainerList(String traineeUsername) {
         log.info("Retrieving trainer list for trainee with USERNAME: {}", traineeUsername);
         return trainerDAO.getNotAssignedTrainers(traineeUsername);
     }
@@ -117,6 +122,17 @@ public class TrainerService {
         List<Trainer> trainers = trainerDAO.getAllTrainers();
         log.info("Retrieved all Trainers: {}", trainers);
         return trainers;
+    }
+
+    @Transactional
+    public List<Trainer> updateTraineeTrainerList(String traineeUsername, TrainerListDTO trainerListDTO) {
+        Trainee trainee = traineeDAO.findByUsername(traineeUsername);
+        List<Trainer> trainers = trainerDAO.getAllTrainers().stream()
+                .filter(trainer -> trainerListDTO.getTrainerUsernameList().contains(trainer.getUsername()))
+                .toList();
+        trainee.getTrainerList().addAll(trainers);
+        traineeDAO.updateTrainee(trainee);
+        return trainee.getTrainerList();
     }
 
     private User buildNewUser(String firstName, String lastName) {

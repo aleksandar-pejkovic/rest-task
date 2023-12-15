@@ -130,8 +130,8 @@ public class GymFacade {
         trainerService.deleteTrainer(username, password);
     }
 
-    public List<Trainer> readNotAssignedTrainerList(String traineeUsername, String password) {
-        return trainerService.getNotAssignedTrainerList(traineeUsername, password);
+    public List<Trainer> readNotAssignedTrainerList(String traineeUsername) {
+        return trainerService.getNotAssignedTrainerList(traineeUsername);
     }
 
     // Training-related methods
