@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -146,10 +145,9 @@ class TrainingServiceTest {
         when(trainingDAO.getTraineeTrainingList(trainee.getUsername(), trainingDuration)).thenReturn(expectedTrainingList);
 
         // Act
-        List<Training> result = trainingService.getTraineeTrainingList(trainee.getUsername(), trainee.getPassword(), trainingDuration);
+        List<Training> result = trainingService.getTraineeTrainingList(trainee.getUsername(), trainingDuration);
 
         // Assert
-        verify(userAuthentication, times(1)).authenticateUser(eq(trainee.getUsername()), eq(trainee.getPassword()));
         verify(trainingDAO, times(1)).getTraineeTrainingList(trainee.getUsername(), trainingDuration);
         assertEquals(expectedTrainingList, result);
     }
@@ -162,10 +160,9 @@ class TrainingServiceTest {
         when(trainingDAO.getTrainerTrainingList(trainer.getUsername(), trainingDuration)).thenReturn(expectedTrainingList);
 
         // Act
-        List<Training> result = trainingService.getTrainerTrainingList(trainer.getUsername(), trainer.getPassword(), trainingDuration);
+        List<Training> result = trainingService.getTrainerTrainingList(trainer.getUsername(), trainingDuration);
 
         // Assert
-        verify(userAuthentication, times(1)).authenticateUser(eq(trainer.getUsername()), eq(trainer.getPassword()));
         verify(trainingDAO, times(1)).getTrainerTrainingList(trainer.getUsername(), trainingDuration);
         assertEquals(expectedTrainingList, result);
     }

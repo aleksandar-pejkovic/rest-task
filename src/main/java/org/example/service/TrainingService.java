@@ -1,6 +1,7 @@
 package org.example.service;
 
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
+
 import org.example.dao.TrainingDAO;
 import org.example.model.Trainee;
 import org.example.model.Trainer;
@@ -10,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
@@ -61,8 +62,7 @@ public class TrainingService {
     }
 
     @Transactional(readOnly = true)
-    public List<Training> getTraineeTrainingList(String username, String password, int trainingDuration) {
-        authentication.authenticateUser(username, password);
+    public List<Training> getTraineeTrainingList(String username, int trainingDuration) {
         log.info("Retrieving training list for trainee with USERNAME: {}", username);
         List<Training> trainingList = trainingDAO.getTraineeTrainingList(username, trainingDuration);
         log.info("Successfully retrieved training list: {}", trainingList);
@@ -70,8 +70,7 @@ public class TrainingService {
     }
 
     @Transactional(readOnly = true)
-    public List<Training> getTrainerTrainingList(String username, String password, int trainingDuration) {
-        authentication.authenticateUser(username, password);
+    public List<Training> getTrainerTrainingList(String username, int trainingDuration) {
         log.info("Retrieving training list for trainer with USERNAME: {}", username);
         List<Training> trainingList = trainingDAO.getTrainerTrainingList(username, trainingDuration);
         log.info("Successfully retrieved training list: {}", trainingList);

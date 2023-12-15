@@ -6,6 +6,8 @@ import java.util.List;
 import org.example.enums.TrainingTypeName;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -26,6 +28,7 @@ public class TrainingType implements AbstractEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Enumerated(EnumType.STRING)
     private TrainingTypeName trainingTypeName;
 
     @OneToMany(mappedBy = "specialization")

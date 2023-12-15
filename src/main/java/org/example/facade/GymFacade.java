@@ -160,11 +160,11 @@ public class GymFacade {
         return trainingService.deleteTraining(training);
     }
 
-    public List<Training> readTraineeTrainingList(String username, String password, int trainingDuration) {
-        return trainingService.getTraineeTrainingList(username, password, trainingDuration);
+    public List<Training> readTraineeTrainingList(String username, int trainingDuration) {
+        return trainingService.getTraineeTrainingList(username, trainingDuration);
     }
 
-    public List<Training> readTrainerTrainingList(String username, String password, int trainingDuration) {
-        return trainingService.getTrainerTrainingList(username, password, trainingDuration);
+    public List<Training> readTrainerTrainingList(String username, int trainingDuration) {
+        return trainingService.getTrainerTrainingList(username, trainingDuration);
     }
 }
