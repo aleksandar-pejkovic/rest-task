@@ -1,10 +1,10 @@
 package org.example.dao;
 
-import java.util.Optional;
-
-import org.example.model.Training;
+import org.example.enums.TrainingTypeName;
 import org.example.model.TrainingType;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -19,13 +19,11 @@ public class TrainingTypeDAO extends AbstractDAO<TrainingType> {
         super(sessionFactory);
     }
 
-    public TrainingType findTrainingTypeById(long id) {
-        TrainingType trainingType = findById(TrainingType.class, id);
-        if (Optional.ofNullable(trainingType).isEmpty()) {
-            log.error("TrainingType not found by ID: {}", id);
-            return new TrainingType();
-        }
-        log.error("TrainingType found by ID: {}", id);
-        return trainingType;
+    public TrainingType findByTrainingTypeName(TrainingTypeName trainingTypeName) {
+        Session session = sessionFactory.getCurrentSession();
+        Query<TrainingType> query = session.createQuery("FROM TrainingType t where t.trainingTypeName = " +
+                ":trainingTypeName", TrainingType.class);
+        query.setParameter("trainingTypeName", trainingTypeName.name());
+        return query.getSingleResult();
     }
 }

@@ -3,7 +3,11 @@ package org.example.service;
 import java.util.List;
 
 import org.example.dao.TrainerDAO;
+import org.example.dao.TrainingTypeDAO;
+import org.example.enums.TrainingTypeName;
 import org.example.model.Trainer;
+import org.example.model.TrainingType;
+import org.example.model.User;
 import org.example.utils.CredentialsGenerator;
 import org.example.utils.UserAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,20 +26,26 @@ public class TrainerService {
 
     private final UserAuthentication authentication;
 
+    private final TrainingTypeDAO trainingTypeDAO;
+
     @Autowired
-    public TrainerService(TrainerDAO trainerDAO, CredentialsGenerator credentialsGenerator, UserAuthentication authentication) {
+    public TrainerService(TrainerDAO trainerDAO, CredentialsGenerator credentialsGenerator, UserAuthentication authentication, TrainingTypeDAO trainingTypeDAO) {
         this.trainerDAO = trainerDAO;
         this.generator = credentialsGenerator;
         this.authentication = authentication;
+        this.trainingTypeDAO = trainingTypeDAO;
     }
 
     @Transactional
-    public Trainer createTrainer(Trainer trainer) {
-        String username = generator.generateUsername(trainer.getUser());
+    public Trainer createTrainer(String firstName, String lastName, TrainingTypeName specialization) {
+        TrainingType trainingType = trainingTypeDAO.findByTrainingTypeName(specialization);
+        User newUser = buildNewUser(firstName, lastName);
+        Trainer newTrainer = buildNewTrainer(newUser, trainingType);
+        String username = generator.generateUsername(newTrainer.getUser());
         String password = generator.generateRandomPassword();
-        trainer.setUsername(username);
-        trainer.setPassword(password);
-        return trainerDAO.saveTrainer(trainer);
+        newTrainer.setUsername(username);
+        newTrainer.setPassword(password);
+        return trainerDAO.saveTrainer(newTrainer);
     }
 
     @Transactional(readOnly = true)
@@ -99,5 +109,19 @@ public class TrainerService {
         List<Trainer> trainers = trainerDAO.getAllTrainers();
         log.info("Retrieved all Trainers: {}", trainers);
         return trainers;
+    }
+
+    private User buildNewUser(String firstName, String lastName) {
+        return User.builder()
+                .firstName(firstName)
+                .lastName(lastName)
+                .build();
+    }
+
+    private Trainer buildNewTrainer(User newUser, TrainingType specialization) {
+        return Trainer.builder()
+                .user(newUser)
+                .specialization(specialization)
+                .build();
     }
 }

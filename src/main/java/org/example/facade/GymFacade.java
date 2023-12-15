@@ -1,6 +1,7 @@
 package org.example.facade;
 
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
+
 import org.example.model.Trainee;
 import org.example.model.Trainer;
 import org.example.model.Training;
@@ -10,7 +11,7 @@ import org.example.service.TrainingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Slf4j
@@ -80,7 +81,8 @@ public class GymFacade {
 
     public void createTrainer(Trainer trainer) {
         log.info("Creating trainer...");
-        trainerService.createTrainer(trainer);
+        trainerService.createTrainer(trainer.getUser().getFirstName(), trainer.getUser().getLastName(),
+                trainer.getSpecialization().getTrainingTypeName());
     }
 
     public Trainer getTrainerUsername(String username) {

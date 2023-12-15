@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.example.dao.TrainerDAO;
+import org.example.enums.TrainingTypeName;
 import org.example.model.Trainer;
 import org.example.model.TrainingType;
 import org.example.model.User;
@@ -53,7 +54,10 @@ class TrainerServiceTest {
 
             trainer = Trainer.builder()
                     .user(user)
-                    .specialization(new TrainingType())
+                    .specialization(TrainingType.builder()
+                            .id(1L)
+                            .trainingTypeName(TrainingTypeName.AEROBIC)
+                            .build())
                     .build();
 
             doNothing().when(userAuthentication).authenticateUser(eq(trainer.getUsername()), eq(trainer.getPassword()));
@@ -68,7 +72,8 @@ class TrainerServiceTest {
         when(trainerDAO.saveTrainer(any())).thenReturn(trainer);
 
         // Act
-        Trainer result = trainerService.createTrainer(trainer);
+        Trainer result = trainerService.createTrainer(trainer.getUser().getFirstName(),
+                trainer.getUser().getLastName(), trainer.getSpecialization().getTrainingTypeName());
 
         // Assert
         verify(trainerDAO, times(1)).saveTrainer(trainer);

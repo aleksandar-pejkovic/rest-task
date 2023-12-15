@@ -13,7 +13,6 @@ import org.example.service.AuthenticationService;
 import org.example.service.TraineeService;
 import org.example.service.TrainerService;
 import org.example.service.TrainingService;
-import org.example.service.TrainingTypeService;
 import org.example.utils.CredentialsGenerator;
 import org.example.utils.UserAuthentication;
 import org.hibernate.SessionFactory;
@@ -63,18 +62,13 @@ public class AppConfig {
 
     @Bean
     public TrainerService trainerService(TrainerDAO trainerDAO, CredentialsGenerator credentialsGenerator,
-                                         UserAuthentication authentication) {
-        return new TrainerService(trainerDAO, credentialsGenerator, authentication);
+                                         UserAuthentication authentication, TrainingTypeDAO trainingTypeDAO) {
+        return new TrainerService(trainerDAO, credentialsGenerator, authentication, trainingTypeDAO);
     }
 
     @Bean
     public TrainingService trainingService(TrainingDAO trainingDAO, UserAuthentication authentication) {
         return new TrainingService(trainingDAO, authentication);
-    }
-
-    @Bean
-    public TrainingTypeService trainingTypeService(TrainingTypeDAO trainingTypeDAO) {
-        return new TrainingTypeService(trainingTypeDAO);
     }
 
     @Bean
@@ -88,8 +82,8 @@ public class AppConfig {
     }
 
     @Bean
-    public TrainerController trainerController(TrainerService trainerService, TrainingTypeService trainingTypeService) {
-        return new TrainerController(trainerService, trainingTypeService);
+    public TrainerController trainerController(TrainerService trainerService) {
+        return new TrainerController(trainerService);
     }
 
     @Bean
