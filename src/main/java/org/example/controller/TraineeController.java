@@ -2,14 +2,14 @@ package org.example.controller;
 
 import java.util.Date;
 
+import org.example.dto.credentials.CredentialsDTO;
+import org.example.dto.trainee.TraineeDTO;
 import org.example.model.Trainee;
-import org.example.model.User;
-import org.example.response.CredentialsResponse;
-import org.example.response.TraineeResponse;
 import org.example.service.TraineeService;
 import org.example.utils.TraineeConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,19 +30,15 @@ public class TraineeController {
     }
 
     @PostMapping
-    public CredentialsResponse traineeRegistration(
+    public CredentialsDTO traineeRegistration(
             @RequestParam String firstName,
             @RequestParam String lastName,
             @RequestParam(required = false) Date dateOfBirth,
             @RequestParam(required = false) String address
     ) {
-        User newUser = buildNewUser(firstName, lastName);
+        Trainee savedTrainee = traineeService.createTrainee(firstName, lastName, dateOfBirth, address);
 
-        Trainee newTrainee = buildNewTrainee(dateOfBirth, address, newUser);
-
-        Trainee savedTrainee = traineeService.createTrainee(newTrainee);
-
-        return CredentialsResponse.builder()
+        return CredentialsDTO.builder()
                 .username(savedTrainee.getUsername())
                 .password(savedTrainee.getPassword())
                 .build();
@@ -63,20 +59,13 @@ public class TraineeController {
     }
 
     @GetMapping("/{username}")
-    public TraineeResponse getTraineeByUsername(@PathVariable String username) {
+    public TraineeDTO getTraineeByUsername(@PathVariable String username) {
         Trainee trainee = traineeService.getTraineeByUsername(username);
-        return TraineeConverter.convertToResponse(trainee);
-    }
-
-    private User buildNewUser(String firstName, String lastName) {
-        return User.builder()
-                .firstName(firstName)
-                .lastName(lastName)
-                .build();
+        return TraineeConverter.convertToDto(trainee);
     }
 
     @PutMapping
-    public TraineeResponse updateTraineeProfile(
+    public TraineeDTO updateTraineeProfile(
             @RequestParam String username,
             @RequestParam String firstName,
             @RequestParam String lastName,
@@ -91,14 +80,16 @@ public class TraineeController {
         trainee.setAddress(address);
         trainee.getUser().setActive(isActive);
         Trainee updatedTrainee = traineeService.updateTrainee(trainee);
-        return TraineeConverter.convertToResponse(updatedTrainee);
+        return TraineeConverter.convertToDto(updatedTrainee);
     }
 
-    private Trainee buildNewTrainee(Date dateOfBirth, String address, User newUser) {
-        return Trainee.builder()
-                .dateOfBirth(dateOfBirth)
-                .address(address)
-                .user(newUser)
-                .build();
+    @DeleteMapping
+    public ResponseEntity<Boolean> deleteTraineeProfile(@RequestParam String username) {
+        boolean successfulDeletion = traineeService.deleteTrainee(username);
+        if (successfulDeletion) {
+            return ResponseEntity.ok(true);
+        } else {
+            return ResponseEntity.badRequest().body(false);
+        }
     }
 }

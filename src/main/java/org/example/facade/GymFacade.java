@@ -39,7 +39,12 @@ public class GymFacade {
 
     public Trainee createTrainee(Trainee trainee) {
         log.info("Creating trainee...");
-        return traineeService.createTrainee(trainee);
+        return traineeService.createTrainee(
+                trainee.getUser().getFirstName(),
+                trainee.getUser().getLastName(),
+                trainee.getDateOfBirth(),
+                trainee.getAddress()
+        );
     }
 
     public Trainee getTraineeByUsername(String username) {
@@ -67,9 +72,9 @@ public class GymFacade {
         return traineeService.deactivateTrainee(trainee);
     }
 
-    public void deleteTrainee(String username, String password) {
+    public void deleteTrainee(String username) {
         log.info("Deleting trainee with USERNAME: {}", username);
-        traineeService.deleteTrainee(username, password);
+        traineeService.deleteTrainee(username);
     }
 
     // Trainer-related methods

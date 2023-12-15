@@ -1,14 +1,11 @@
-package org.example.response;
+package org.example.dto.trainee;
 
 import java.util.Date;
-import java.util.List;
 
-import org.example.dto.TrainerDTO;
+import lombok.Getter;
 
-import lombok.Builder;
-
-@Builder
-public class TraineeResponse {
+@Getter
+public class TraineeUpdateDTO {
 
     private long id;
 
@@ -23,7 +20,4 @@ public class TraineeResponse {
     private String address;
 
     private boolean isActive;
-
-    private List<TrainerDTO> trainerDTOList;
-
 }

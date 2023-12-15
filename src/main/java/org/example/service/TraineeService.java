@@ -1,9 +1,11 @@
 package org.example.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.example.dao.TraineeDAO;
 import org.example.model.Trainee;
+import org.example.model.User;
 import org.example.utils.CredentialsGenerator;
 import org.example.utils.UserAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,12 +32,14 @@ public class TraineeService {
     }
 
     @Transactional
-    public Trainee createTrainee(Trainee trainee) {
-        String username = generator.generateUsername(trainee.getUser());
+    public Trainee createTrainee(String firstName, String lastName, Date dateOfBirth, String address) {
+        User newUser = buildNewUser(firstName, lastName);
+        Trainee newTrainee = buildNewTrainee(dateOfBirth, address, newUser);
+        String username = generator.generateUsername(newTrainee.getUser());
         String password = generator.generateRandomPassword();
-        trainee.setUsername(username);
-        trainee.setPassword(password);
-        return traineeDAO.saveTrainee(trainee);
+        newTrainee.setUsername(username);
+        newTrainee.setPassword(password);
+        return traineeDAO.saveTrainee(newTrainee);
     }
 
     @Transactional(readOnly = true)
@@ -82,8 +86,7 @@ public class TraineeService {
     }
 
     @Transactional
-    public boolean deleteTrainee(String username, String password) {
-        authentication.authenticateUser(username, password);
+    public boolean deleteTrainee(String username) {
         return traineeDAO.deleteTraineeByUsername(username);
     }
 
@@ -92,5 +95,20 @@ public class TraineeService {
         List<Trainee> trainees = traineeDAO.getAllTrainees();
         log.info("Retrieved all Trainees: {}", trainees);
         return trainees;
+    }
+
+    private User buildNewUser(String firstName, String lastName) {
+        return User.builder()
+                .firstName(firstName)
+                .lastName(lastName)
+                .build();
+    }
+
+    private Trainee buildNewTrainee(Date dateOfBirth, String address, User newUser) {
+        return Trainee.builder()
+                .dateOfBirth(dateOfBirth)
+                .address(address)
+                .user(newUser)
+                .build();
     }
 }

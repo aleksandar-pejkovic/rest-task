@@ -1,11 +1,11 @@
-package org.example.dto;
+package org.example.dto.trainer;
 
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @Builder
-public class TrainerDTO {
+public class TrainerEmbeddedDTO {
 
     String username;
 

@@ -69,7 +69,12 @@ class TraineeServiceTest {
         when(traineeDAO.saveTrainee(any())).thenReturn(trainee);
 
         // Act
-        Trainee result = traineeService.createTrainee(trainee);
+        Trainee result = traineeService.createTrainee(
+                trainee.getUser().getFirstName(),
+                trainee.getUser().getLastName(),
+                trainee.getDateOfBirth(),
+                trainee.getAddress()
+        );
 
         // Assert
         verify(traineeDAO, times(1)).saveTrainee(trainee);
@@ -155,14 +160,12 @@ class TraineeServiceTest {
     void deleteTrainee() {
         // Arrange
         String username = "testUser";
-        String password = "testPassword";
         when(traineeDAO.deleteTraineeByUsername(username)).thenReturn(true);
 
         // Act
-        boolean result = traineeService.deleteTrainee(username, password);
+        boolean result = traineeService.deleteTrainee(username);
 
         // Assert
-        verify(userAuthentication, times(1)).authenticateUser(username, password);
         verify(traineeDAO, times(1)).deleteTraineeByUsername(username);
         assertTrue(result);
     }

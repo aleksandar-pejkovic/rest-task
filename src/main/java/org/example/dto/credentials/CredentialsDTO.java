@@ -1,9 +1,9 @@
-package org.example.response;
+package org.example.dto.credentials;
 
 import lombok.Builder;
 
 @Builder
-public class CredentialsResponse {
+public class CredentialsDTO {
 
     private String username;
 

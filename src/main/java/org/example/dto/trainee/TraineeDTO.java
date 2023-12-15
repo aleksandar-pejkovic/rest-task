@@ -1,17 +1,18 @@
-package org.example.dto;
+package org.example.dto.trainee;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import lombok.Builder;
-import lombok.Getter;
+import org.example.dto.trainer.TrainerEmbeddedDTO;
 
-@Getter
+import lombok.Builder;
+
 @Builder
 public class TraineeDTO {
 
     private long id;
+
+    private String username;
 
     private String firstName;
 
@@ -23,5 +24,5 @@ public class TraineeDTO {
 
     private boolean isActive;
 
-    private List<TrainerDTO> trainerList = new ArrayList<>();
+    private List<TrainerEmbeddedDTO> trainerEmbeddedDTOList;
 }

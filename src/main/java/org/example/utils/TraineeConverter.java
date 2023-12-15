@@ -2,19 +2,19 @@ package org.example.utils;
 
 import java.util.List;
 
-import org.example.dto.TrainerDTO;
+import org.example.dto.trainee.TraineeDTO;
+import org.example.dto.trainer.TrainerEmbeddedDTO;
 import org.example.model.Trainee;
-import org.example.response.TraineeResponse;
 
 public class TraineeConverter {
 
     protected TraineeConverter() {
     }
 
-    public static TraineeResponse convertToResponse(Trainee entity) {
-        List<TrainerDTO> trainerDTOList = TrainerConverter.convertToDtoList(entity.getTrainerList());
+    public static TraineeDTO convertToDto(Trainee entity) {
+        List<TrainerEmbeddedDTO> trainerEmbeddedDTOList = TrainerConverter.convertToEmbeddedDtoList(entity.getTrainerList());
 
-        return TraineeResponse.builder()
+        return TraineeDTO.builder()
                 .id(entity.getId())
                 .username(entity.getUsername())
                 .firstName(entity.getUser().getFirstName())
@@ -22,7 +22,7 @@ public class TraineeConverter {
                 .dateOfBirth(entity.getDateOfBirth())
                 .address(entity.getAddress())
                 .isActive(entity.getUser().isActive())
-                .trainerDTOList(trainerDTOList)
+                .trainerEmbeddedDTOList(trainerEmbeddedDTOList)
                 .build();
     }
 }

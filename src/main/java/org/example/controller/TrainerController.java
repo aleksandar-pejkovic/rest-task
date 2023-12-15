@@ -2,7 +2,7 @@ package org.example.controller;
 
 import org.example.enums.TrainingTypeName;
 import org.example.model.Trainer;
-import org.example.response.CredentialsResponse;
+import org.example.dto.credentials.CredentialsDTO;
 import org.example.service.TrainerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,14 +24,14 @@ public class TrainerController {
     }
 
     @PostMapping
-    public CredentialsResponse traineeRegistration(
+    public CredentialsDTO traineeRegistration(
             @RequestParam String firstName,
             @RequestParam String lastName,
             @RequestParam TrainingTypeName specialization
     ) {
         Trainer savedTrainer = trainerService.createTrainer(firstName, lastName, specialization);
 
-        return CredentialsResponse.builder()
+        return CredentialsDTO.builder()
                 .username(savedTrainer.getUsername())
                 .password(savedTrainer.getPassword())
                 .build();
