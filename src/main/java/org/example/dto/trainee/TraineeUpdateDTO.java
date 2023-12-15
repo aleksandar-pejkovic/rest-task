@@ -2,12 +2,12 @@ package org.example.dto.trainee;
 
 import java.util.Date;
 
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
 public class TraineeUpdateDTO {
-
-    private long id;
 
     private String username;
 

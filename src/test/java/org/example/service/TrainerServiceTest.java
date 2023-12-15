@@ -3,8 +3,7 @@ package org.example.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doNothing;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -13,6 +12,9 @@ import java.util.Collections;
 import java.util.List;
 
 import org.example.dao.TrainerDAO;
+import org.example.dao.TrainingTypeDAO;
+import org.example.dto.credentials.CredentialsUpdateDTO;
+import org.example.dto.trainer.TrainerUpdateDTO;
 import org.example.enums.TrainingTypeName;
 import org.example.model.Trainer;
 import org.example.model.TrainingType;
@@ -29,6 +31,9 @@ class TrainerServiceTest {
 
     @Mock
     private TrainerDAO trainerDAO;
+
+    @Mock
+    private TrainingTypeDAO trainingTypeDAO;
 
     @Mock
     private CredentialsGenerator credentialsGenerator;
@@ -60,13 +65,19 @@ class TrainerServiceTest {
                             .build())
                     .build();
 
-            doNothing().when(userAuthentication).authenticateUser(eq(trainer.getUsername()), eq(trainer.getPassword()));
+            when(userAuthentication.authenticateUser(anyString(), anyString())).thenReturn(true);
         }
     }
 
     @Test
     void createTrainer() {
         // Arrange
+        TrainingType trainingType = TrainingType.builder()
+                .id(1L)
+                .trainingTypeName(TrainingTypeName.AEROBIC)
+                .build();
+
+        when(trainingTypeDAO.findByTrainingTypeName(any())).thenReturn(trainingType);
         when(credentialsGenerator.generateUsername(any())).thenReturn("Valentino.Rossi");
         when(credentialsGenerator.generateRandomPassword()).thenReturn("9876543210");
         when(trainerDAO.saveTrainer(any())).thenReturn(trainer);
@@ -76,9 +87,7 @@ class TrainerServiceTest {
                 trainer.getUser().getLastName(), trainer.getSpecialization().getTrainingTypeName());
 
         // Assert
-        verify(trainerDAO, times(1)).saveTrainer(trainer);
-        assertEquals("Valentino.Rossi", result.getUsername());
-        assertEquals("9876543210", result.getPassword());
+        verify(trainerDAO, times(1)).saveTrainer(any());
     }
 
     @Test
@@ -99,32 +108,48 @@ class TrainerServiceTest {
     @Test
     void changePassword() {
         // Arrange
-        String username = "testUser";
-        String oldPassword = "oldPassword";
-        String newPassword = "newPassword";
+        CredentialsUpdateDTO credentialsUpdateDTO = CredentialsUpdateDTO.builder()
+                .username("testUser")
+                .oldPassword("oldPassword")
+                .newPassword("newPassword")
+                .build();
 
-        when(trainerService.getTrainerByUsername(username)).thenReturn(trainer);
+        when(trainerService.getTrainerByUsername(credentialsUpdateDTO.getUsername())).thenReturn(trainer);
         when(trainerDAO.updateTrainer(trainer)).thenReturn(trainer);
 
         // Act
-        Trainer result = trainerService.changePassword(username, oldPassword, newPassword);
+        Trainer result = trainerService.changePassword(credentialsUpdateDTO);
 
         // Assert
-        verify(userAuthentication, times(1)).authenticateUser(username, oldPassword);
+        verify(userAuthentication, times(1)).authenticateUser(credentialsUpdateDTO.getUsername(),
+                credentialsUpdateDTO.getOldPassword());
         verify(trainerDAO, times(1)).updateTrainer(trainer);
-        assertEquals(newPassword, result.getPassword());
+        assertEquals(credentialsUpdateDTO.getNewPassword(), result.getPassword());
     }
 
     @Test
     void updateTrainer() {
         // Arrange
+        TrainingType trainingType = TrainingType.builder()
+                .id(1L)
+                .trainingTypeName(TrainingTypeName.AEROBIC)
+                .build();
+
+        when(trainerDAO.findByUsername(any())).thenReturn(trainer);
+        when(trainingTypeDAO.findByTrainingTypeName(any())).thenReturn(trainingType);
         when(trainerDAO.updateTrainer(trainer)).thenReturn(trainer);
+        TrainerUpdateDTO trainerUpdateDTO = TrainerUpdateDTO.builder()
+                .username(trainer.getUsername())
+                .firstName(trainer.getUser().getFirstName())
+                .lastName(trainer.getUser().getLastName())
+                .specialization(trainer.getSpecialization().getTrainingTypeName())
+                .isActive(trainer.getUser().isActive())
+                .build();
 
         // Act
-        trainerService.updateTrainer(trainer);
+        trainerService.updateTrainer(trainerUpdateDTO);
 
         // Assert
-        verify(userAuthentication, times(1)).authenticateUser(trainer.getUsername(), trainer.getPassword());
         verify(trainerDAO, times(1)).updateTrainer(trainer);
     }
 

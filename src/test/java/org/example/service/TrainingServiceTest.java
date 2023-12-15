@@ -3,8 +3,8 @@ package org.example.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -81,7 +81,7 @@ class TrainingServiceTest {
             training.setTrainee(trainee);
             training.setTrainer(trainer);
 
-            doNothing().when(userAuthentication).authenticateUser(eq(trainee.getUsername()), eq(trainee.getPassword()));
+            when(userAuthentication.authenticateUser(anyString(), anyString())).thenReturn(true);
         }
     }
 

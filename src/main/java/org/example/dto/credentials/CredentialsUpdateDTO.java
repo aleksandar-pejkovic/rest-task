@@ -5,9 +5,11 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class CredentialsDTO {
+public class CredentialsUpdateDTO {
 
     private String username;
 
-    private String password;
+    private String oldPassword;
+
+    private String newPassword;
 }

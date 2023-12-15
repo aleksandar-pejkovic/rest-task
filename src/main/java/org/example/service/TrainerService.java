@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.example.dao.TrainerDAO;
 import org.example.dao.TrainingTypeDAO;
+import org.example.dto.credentials.CredentialsUpdateDTO;
+import org.example.dto.trainer.TrainerUpdateDTO;
 import org.example.enums.TrainingTypeName;
 import org.example.model.Trainer;
 import org.example.model.TrainingType;
@@ -56,20 +58,26 @@ public class TrainerService {
     }
 
     @Transactional
-    public Trainer changePassword(String username, String oldPassword, String newPassword) {
-        authentication.authenticateUser(username, oldPassword);
-        Trainer trainer = getTrainerByUsername(username);
-        trainer.setPassword(newPassword);
+    public Trainer changePassword(CredentialsUpdateDTO credentialsUpdateDTO) {
+        authentication.authenticateUser(credentialsUpdateDTO.getUsername(), credentialsUpdateDTO.getOldPassword());
+        Trainer trainer = getTrainerByUsername(credentialsUpdateDTO.getUsername());
+        trainer.setPassword(credentialsUpdateDTO.getNewPassword());
         Trainer updatedTrainer = trainerDAO.updateTrainer(trainer);
         log.info("Password updated for trainer: {}", trainer);
         return updatedTrainer;
     }
 
     @Transactional
-    public void updateTrainer(Trainer trainer) {
-        authentication.authenticateUser(trainer.getUsername(), trainer.getPassword());
-        trainerDAO.updateTrainer(trainer);
-        log.info("Trainer updated: {}", trainer);
+    public Trainer updateTrainer(TrainerUpdateDTO trainerUpdateDTO) {
+        Trainer trainer = getTrainerByUsername(trainerUpdateDTO.getUsername());
+        TrainingType trainingType = trainingTypeDAO.findByTrainingTypeName(trainerUpdateDTO.getSpecialization());
+        trainer.getUser().setFirstName(trainerUpdateDTO.getFirstName());
+        trainer.getUser().setLastName(trainerUpdateDTO.getLastName());
+        trainer.setSpecialization(trainingType);
+        trainer.getUser().setActive(trainerUpdateDTO.isActive());
+        Trainer updatedTrainer = trainerDAO.updateTrainer(trainer);
+        log.info("Trainer updated: {}", updatedTrainer);
+        return updatedTrainer;
     }
 
     @Transactional

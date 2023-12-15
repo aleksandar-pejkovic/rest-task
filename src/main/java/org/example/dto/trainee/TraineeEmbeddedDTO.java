@@ -1,9 +1,9 @@
-package org.example.dto.trainer;
+package org.example.dto.trainee;
 
 import lombok.Builder;
 
 @Builder
-public class TrainerEmbeddedDTO {
+public class TraineeEmbeddedDTO {
 
     String username;
 
@@ -11,5 +11,4 @@ public class TrainerEmbeddedDTO {
 
     String lastName;
 
-    String specialization;
 }

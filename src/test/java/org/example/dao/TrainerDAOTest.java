@@ -14,6 +14,7 @@ import static org.mockito.Mockito.when;
 import java.util.Collections;
 import java.util.List;
 
+import org.example.enums.TrainingTypeName;
 import org.example.model.Trainer;
 import org.example.model.TrainingType;
 import org.example.model.User;
@@ -46,7 +47,7 @@ class TrainerDAOTest {
             testTrainer = Trainer.builder()
                     .specialization(TrainingType.builder()
                             .id(1L)
-                            .trainingTypeName("Cardio")
+                            .trainingTypeName(TrainingTypeName.AEROBIC)
                             .build())
                     .user(User.builder()
                             .isActive(true)
@@ -97,7 +98,7 @@ class TrainerDAOTest {
         Trainer trainerAfterUpdate = Trainer.builder()
                 .specialization(TrainingType.builder()
                         .id(2L)
-                        .trainingTypeName("Strength")
+                        .trainingTypeName(TrainingTypeName.AEROBIC)
                         .build())
                 .user(testTrainer.getUser())
                 .build();

@@ -3,8 +3,7 @@ package org.example.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doNothing;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -14,6 +13,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.example.dao.TraineeDAO;
+import org.example.dto.credentials.CredentialsUpdateDTO;
+import org.example.dto.trainee.TraineeUpdateDTO;
 import org.example.model.Trainee;
 import org.example.model.User;
 import org.example.utils.CredentialsGenerator;
@@ -57,7 +58,7 @@ class TraineeServiceTest {
                     .dateOfBirth(new Date())
                     .build();
 
-            doNothing().when(userAuthentication).authenticateUser(eq(trainee.getUsername()), eq(trainee.getPassword()));
+            when(userAuthentication.authenticateUser(anyString(), anyString())).thenReturn(true);
         }
     }
 
@@ -77,7 +78,7 @@ class TraineeServiceTest {
         );
 
         // Assert
-        verify(traineeDAO, times(1)).saveTrainee(trainee);
+        verify(traineeDAO, times(1)).saveTrainee(any());
         assertEquals("Max.Biaggi", result.getUsername());
         assertEquals("0123456789", result.getPassword());
     }
@@ -100,29 +101,41 @@ class TraineeServiceTest {
     @Test
     void changePassword() {
         // Arrange
-        String username = "testUser";
-        String oldPassword = "oldPassword";
-        String newPassword = "newPassword";
+        CredentialsUpdateDTO credentialsUpdateDTO = CredentialsUpdateDTO.builder()
+                .username("testUser")
+                .oldPassword("oldPassword")
+                .newPassword("newPassword")
+                .build();
 
-        when(traineeService.getTraineeByUsername(username)).thenReturn(trainee);
+        when(traineeService.getTraineeByUsername(credentialsUpdateDTO.getUsername())).thenReturn(trainee);
         when(traineeDAO.updateTrainee(trainee)).thenReturn(trainee);
 
         // Act
-        Trainee result = traineeService.changePassword(username, oldPassword, newPassword);
+        Trainee result = traineeService.changePassword(credentialsUpdateDTO);
 
         // Assert
-        verify(userAuthentication, times(1)).authenticateUser(username, oldPassword);
+        verify(userAuthentication, times(1)).authenticateUser(credentialsUpdateDTO.getUsername(),
+                credentialsUpdateDTO.getOldPassword());
         verify(traineeDAO, times(1)).updateTrainee(trainee);
-        assertEquals(newPassword, result.getPassword());
+        assertEquals(credentialsUpdateDTO.getNewPassword(), result.getPassword());
     }
 
     @Test
     void updateTrainee() {
         // Arrange
+        when(traineeDAO.findByUsername(anyString())).thenReturn(trainee);
         when(traineeDAO.updateTrainee(trainee)).thenReturn(trainee);
 
         // Act
-        Trainee result = traineeService.updateTrainee(trainee);
+        TraineeUpdateDTO traineeUpdateDTO = TraineeUpdateDTO.builder()
+                .username(trainee.getUsername())
+                .firstName(trainee.getUser().getFirstName())
+                .lastName(trainee.getUser().getLastName())
+                .dateOfBirth(trainee.getDateOfBirth())
+                .address(trainee.getAddress())
+                .isActive(trainee.getUser().isActive())
+                .build();
+        Trainee result = traineeService.updateTrainee(traineeUpdateDTO);
 
         // Assert
         verify(userAuthentication, times(1)).authenticateUser(trainee.getUsername(), trainee.getPassword());

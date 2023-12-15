@@ -2,6 +2,9 @@ package org.example.facade;
 
 import java.util.List;
 
+import org.example.dto.credentials.CredentialsUpdateDTO;
+import org.example.dto.trainee.TraineeUpdateDTO;
+import org.example.dto.trainer.TrainerUpdateDTO;
 import org.example.model.Trainee;
 import org.example.model.Trainer;
 import org.example.model.Training;
@@ -52,14 +55,22 @@ public class GymFacade {
         return traineeService.getTraineeByUsername(username);
     }
 
-    public Trainee changeTraineePassword(String username, String oldPassword, String newPassword) {
+    public Trainee changeTraineePassword(CredentialsUpdateDTO credentialsUpdateDTO) {
         log.info("Changing trainee password...");
-        return traineeService.changePassword(username, oldPassword, newPassword);
+        return traineeService.changePassword(credentialsUpdateDTO);
     }
 
     public Trainee updateTrainee(Trainee trainee) {
+        TraineeUpdateDTO traineeUpdateDTO = TraineeUpdateDTO.builder()
+                .username(trainee.getUsername())
+                .firstName(trainee.getUser().getFirstName())
+                .lastName(trainee.getUser().getLastName())
+                .dateOfBirth(trainee.getDateOfBirth())
+                .address(trainee.getAddress())
+                .isActive(trainee.getUser().isActive())
+                .build();
         log.info("Updating trainee...");
-        return traineeService.updateTrainee(trainee);
+        return traineeService.updateTrainee(traineeUpdateDTO);
     }
 
     public Trainee activateTrainee(Trainee trainee) {
@@ -95,14 +106,14 @@ public class GymFacade {
         return trainerService.getTrainerByUsername(username);
     }
 
-    public Trainer changeTrainerPassword(String username, String oldPassword, String newPassword) {
+    public Trainer changeTrainerPassword(CredentialsUpdateDTO credentialsUpdateDTO) {
         log.info("Changing trainer password...");
-        return trainerService.changePassword(username, oldPassword, newPassword);
+        return trainerService.changePassword(credentialsUpdateDTO);
     }
 
-    public void updateTrainer(Trainer trainer) {
+    public void updateTrainer(TrainerUpdateDTO trainerUpdateDTO) {
         log.info("Updating trainer...");
-        trainerService.updateTrainer(trainer);
+        trainerService.updateTrainer(trainerUpdateDTO);
     }
 
     public Trainer activateTrainer(Trainer trainer) {

@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.example.dao.TraineeDAO;
+import org.example.dto.credentials.CredentialsUpdateDTO;
+import org.example.dto.trainee.TraineeUpdateDTO;
 import org.example.model.Trainee;
 import org.example.model.User;
 import org.example.utils.CredentialsGenerator;
@@ -50,17 +52,23 @@ public class TraineeService {
     }
 
     @Transactional
-    public Trainee changePassword(String username, String oldPassword, String newPassword) {
-        authentication.authenticateUser(username, oldPassword);
-        Trainee trainee = getTraineeByUsername(username);
-        trainee.setPassword(newPassword);
+    public Trainee changePassword(CredentialsUpdateDTO credentialsUpdateDTO) {
+        authentication.authenticateUser(credentialsUpdateDTO.getUsername(), credentialsUpdateDTO.getOldPassword());
+        Trainee trainee = getTraineeByUsername(credentialsUpdateDTO.getUsername());
+        trainee.setPassword(credentialsUpdateDTO.getNewPassword());
         Trainee updatedTrainee = traineeDAO.updateTrainee(trainee);
         log.info("Password updated for trainee: {}", trainee);
         return updatedTrainee;
     }
 
     @Transactional
-    public Trainee updateTrainee(Trainee trainee) {
+    public Trainee updateTrainee(TraineeUpdateDTO traineeUpdateDTO) {
+        Trainee trainee = getTraineeByUsername(traineeUpdateDTO.getUsername());
+        trainee.getUser().setFirstName(traineeUpdateDTO.getFirstName());
+        trainee.getUser().setLastName(traineeUpdateDTO.getLastName());
+        trainee.setDateOfBirth(traineeUpdateDTO.getDateOfBirth());
+        trainee.setAddress(traineeUpdateDTO.getAddress());
+        trainee.getUser().setActive(traineeUpdateDTO.isActive());
         authentication.authenticateUser(trainee.getUsername(), trainee.getPassword());
         Trainee updatedTrainee = traineeDAO.updateTrainee(trainee);
         log.info("Trainee updated: {}", trainee);

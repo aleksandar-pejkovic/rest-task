@@ -3,7 +3,9 @@ package org.example.controller;
 import java.util.Date;
 
 import org.example.dto.credentials.CredentialsDTO;
+import org.example.dto.credentials.CredentialsUpdateDTO;
 import org.example.dto.trainee.TraineeDTO;
+import org.example.dto.trainee.TraineeUpdateDTO;
 import org.example.model.Trainee;
 import org.example.service.TraineeService;
 import org.example.utils.TraineeConverter;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,13 +48,9 @@ public class TraineeController {
     }
 
     @PutMapping("/change-login")
-    public ResponseEntity<Boolean> changeLogin(
-            @RequestParam String username,
-            @RequestParam String oldPassword,
-            @RequestParam String newPassword
-    ) {
-        Trainee traineeAfterUpdate = traineeService.changePassword(username, oldPassword, newPassword);
-        if (newPassword.equals(traineeAfterUpdate.getPassword())) {
+    public ResponseEntity<Boolean> changeLogin(@RequestBody CredentialsUpdateDTO credentialsUpdateDTO) {
+        Trainee traineeAfterUpdate = traineeService.changePassword(credentialsUpdateDTO);
+        if (credentialsUpdateDTO.getNewPassword().equals(traineeAfterUpdate.getPassword())) {
             return ResponseEntity.ok(true);
         } else {
             return ResponseEntity.badRequest().body(false);
@@ -65,21 +64,8 @@ public class TraineeController {
     }
 
     @PutMapping
-    public TraineeDTO updateTraineeProfile(
-            @RequestParam String username,
-            @RequestParam String firstName,
-            @RequestParam String lastName,
-            @RequestParam(required = false) Date dateOfBirth,
-            @RequestParam(required = false) String address,
-            @RequestParam boolean isActive
-    ) {
-        Trainee trainee = traineeService.getTraineeByUsername(username);
-        trainee.getUser().setFirstName(firstName);
-        trainee.getUser().setLastName(lastName);
-        trainee.setDateOfBirth(dateOfBirth);
-        trainee.setAddress(address);
-        trainee.getUser().setActive(isActive);
-        Trainee updatedTrainee = traineeService.updateTrainee(trainee);
+    public TraineeDTO updateTraineeProfile(@RequestBody TraineeUpdateDTO traineeUpdateDTO) {
+        Trainee updatedTrainee = traineeService.updateTrainee(traineeUpdateDTO);
         return TraineeConverter.convertToDto(updatedTrainee);
     }
 
