@@ -12,7 +12,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.example.dao.TrainerDAO;
-import org.example.dao.TrainingTypeDAO;
+import org.example.dao.TrainingDAO;
 import org.example.dto.credentials.CredentialsUpdateDTO;
 import org.example.dto.trainer.TrainerUpdateDTO;
 import org.example.enums.TrainingTypeName;
@@ -33,7 +33,7 @@ class TrainerServiceTest {
     private TrainerDAO trainerDAO;
 
     @Mock
-    private TrainingTypeDAO trainingTypeDAO;
+    private TrainingDAO trainingDAO;
 
     @Mock
     private CredentialsGenerator credentialsGenerator;
@@ -77,7 +77,7 @@ class TrainerServiceTest {
                 .trainingTypeName(TrainingTypeName.AEROBIC)
                 .build();
 
-        when(trainingTypeDAO.findByTrainingTypeName(any())).thenReturn(trainingType);
+        when(trainingDAO.findTrainingTypeByName(any())).thenReturn(trainingType);
         when(credentialsGenerator.generateUsername(any())).thenReturn("Valentino.Rossi");
         when(credentialsGenerator.generateRandomPassword()).thenReturn("9876543210");
         when(trainerDAO.saveTrainer(any())).thenReturn(trainer);
@@ -136,7 +136,7 @@ class TrainerServiceTest {
                 .build();
 
         when(trainerDAO.findByUsername(any())).thenReturn(trainer);
-        when(trainingTypeDAO.findByTrainingTypeName(any())).thenReturn(trainingType);
+        when(trainingDAO.findTrainingTypeByName(any())).thenReturn(trainingType);
         when(trainerDAO.updateTrainer(trainer)).thenReturn(trainer);
         TrainerUpdateDTO trainerUpdateDTO = TrainerUpdateDTO.builder()
                 .username(trainer.getUsername())

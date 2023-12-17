@@ -7,7 +7,6 @@ import org.example.controller.TrainingController;
 import org.example.dao.TraineeDAO;
 import org.example.dao.TrainerDAO;
 import org.example.dao.TrainingDAO;
-import org.example.dao.TrainingTypeDAO;
 import org.example.facade.GymFacade;
 import org.example.service.AuthenticationService;
 import org.example.service.TraineeService;
@@ -50,11 +49,6 @@ public class AppConfig {
     }
 
     @Bean
-    public TrainingTypeDAO trainingTypeDAO(SessionFactory sessionFactory) {
-        return new TrainingTypeDAO(sessionFactory);
-    }
-
-    @Bean
     public TraineeService traineeService(TraineeDAO traineeDAO, CredentialsGenerator credentialsGenerator,
                                          UserAuthentication authentication) {
         return new TraineeService(traineeDAO, credentialsGenerator, authentication);
@@ -62,17 +56,16 @@ public class AppConfig {
 
     @Bean
     public TrainerService trainerService(TrainerDAO trainerDAO, TraineeDAO traineeDAO, CredentialsGenerator credentialsGenerator,
-                                         UserAuthentication authentication, TrainingTypeDAO trainingTypeDAO) {
-        return new TrainerService(trainerDAO, traineeDAO, credentialsGenerator, authentication, trainingTypeDAO);
+                                         UserAuthentication authentication, TrainingDAO trainingDAO) {
+        return new TrainerService(trainerDAO, traineeDAO, credentialsGenerator, authentication, trainingDAO);
     }
 
     @Bean
     public TrainingService trainingService(TrainingDAO trainingDAO,
                                            TraineeDAO traineeDAO,
-                                           TrainerDAO trainerDAO,
-                                           TrainingTypeDAO trainingTypeDAO
-    ) {
-        return new TrainingService(trainingDAO, traineeDAO, trainerDAO, trainingTypeDAO);
+                                           TrainerDAO trainerDAO
+                                           ) {
+        return new TrainingService(trainingDAO, traineeDAO, trainerDAO);
     }
 
     @Bean

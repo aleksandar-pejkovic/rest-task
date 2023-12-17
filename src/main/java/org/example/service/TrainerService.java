@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.example.dao.TraineeDAO;
 import org.example.dao.TrainerDAO;
-import org.example.dao.TrainingTypeDAO;
+import org.example.dao.TrainingDAO;
 import org.example.dto.credentials.CredentialsUpdateDTO;
 import org.example.dto.trainer.TrainerListDTO;
 import org.example.dto.trainer.TrainerUpdateDTO;
@@ -33,20 +33,20 @@ public class TrainerService {
 
     private final UserAuthentication authentication;
 
-    private final TrainingTypeDAO trainingTypeDAO;
+    private final TrainingDAO trainingDAO;
 
     @Autowired
-    public TrainerService(TrainerDAO trainerDAO, TraineeDAO traineeDAO, CredentialsGenerator credentialsGenerator, UserAuthentication authentication, TrainingTypeDAO trainingTypeDAO) {
+    public TrainerService(TrainerDAO trainerDAO, TraineeDAO traineeDAO, CredentialsGenerator credentialsGenerator, UserAuthentication authentication, TrainingDAO trainingDAO) {
         this.trainerDAO = trainerDAO;
         this.traineeDAO = traineeDAO;
         this.generator = credentialsGenerator;
         this.authentication = authentication;
-        this.trainingTypeDAO = trainingTypeDAO;
+        this.trainingDAO = trainingDAO;
     }
 
     @Transactional
     public Trainer createTrainer(String firstName, String lastName, TrainingTypeName specialization) {
-        TrainingType trainingType = trainingTypeDAO.findByTrainingTypeName(specialization);
+        TrainingType trainingType = trainingDAO.findTrainingTypeByName(specialization);
         User newUser = buildNewUser(firstName, lastName);
         Trainer newTrainer = buildNewTrainer(newUser, trainingType);
         String username = generator.generateUsername(newTrainer.getUser());
@@ -76,7 +76,7 @@ public class TrainerService {
     @Transactional
     public Trainer updateTrainer(TrainerUpdateDTO trainerUpdateDTO) {
         Trainer trainer = getTrainerByUsername(trainerUpdateDTO.getUsername());
-        TrainingType trainingType = trainingTypeDAO.findByTrainingTypeName(trainerUpdateDTO.getSpecialization());
+        TrainingType trainingType = trainingDAO.findTrainingTypeByName(trainerUpdateDTO.getSpecialization());
         trainer.getUser().setFirstName(trainerUpdateDTO.getFirstName());
         trainer.getUser().setLastName(trainerUpdateDTO.getLastName());
         trainer.setSpecialization(trainingType);

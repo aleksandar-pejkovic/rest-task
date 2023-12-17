@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.example.enums.TrainingTypeName;
 import org.example.model.Training;
+import org.example.model.TrainingType;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -75,6 +78,14 @@ public class TrainingDAO extends AbstractDAO<Training> {
         List<Training> trainingList = findAll(Training.class);
         log.info("Retrieved all trainings. Count: {}", trainingList.size());
         return trainingList;
+    }
+
+    public TrainingType findTrainingTypeByName(TrainingTypeName trainingTypeName) {
+        Session session = sessionFactory.getCurrentSession();
+        Query<TrainingType> query = session.createQuery("FROM TrainingType t where t.trainingTypeName = "
+                + ":trainingTypeName", TrainingType.class);
+        query.setParameter("trainingTypeName", trainingTypeName.name());
+        return query.getSingleResult();
     }
 
     private List<Training> getTrainingList(String entityType, String username, int trainingDuration) {

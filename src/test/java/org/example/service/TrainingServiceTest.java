@@ -16,7 +16,6 @@ import java.util.List;
 import org.example.dao.TraineeDAO;
 import org.example.dao.TrainerDAO;
 import org.example.dao.TrainingDAO;
-import org.example.dao.TrainingTypeDAO;
 import org.example.dto.training.TrainingCreateDTO;
 import org.example.enums.TrainingTypeName;
 import org.example.model.Trainee;
@@ -42,9 +41,6 @@ class TrainingServiceTest {
 
     @Mock
     private TrainerDAO trainerDAO;
-
-    @Mock
-    private TrainingTypeDAO trainingTypeDAO;
 
     @Mock
     private UserAuthentication userAuthentication;
@@ -117,7 +113,7 @@ class TrainingServiceTest {
 
         when(traineeDAO.findByUsername(anyString())).thenReturn(trainee);
         when(trainerDAO.findByUsername(anyString())).thenReturn(trainer);
-        when(trainingTypeDAO.findByTrainingTypeName(any())).thenReturn(training.getTrainingType());
+        when(trainingDAO.findTrainingTypeByName(any())).thenReturn(training.getTrainingType());
         when(trainingDAO.saveTraining(any())).thenReturn(training);
 
         // Act

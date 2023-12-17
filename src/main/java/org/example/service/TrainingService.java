@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.example.dao.TraineeDAO;
 import org.example.dao.TrainerDAO;
 import org.example.dao.TrainingDAO;
-import org.example.dao.TrainingTypeDAO;
 import org.example.dto.training.TrainingCreateDTO;
 import org.example.model.Trainee;
 import org.example.model.Trainer;
@@ -28,14 +27,11 @@ public class TrainingService {
 
     private final TrainerDAO trainerDAO;
 
-    private final TrainingTypeDAO trainingTypeDAO;
-
     @Autowired
-    public TrainingService(TrainingDAO trainingDAO, TraineeDAO traineeDao, TrainerDAO trainerDAO, TrainingTypeDAO trainingTypeDAO) {
+    public TrainingService(TrainingDAO trainingDAO, TraineeDAO traineeDao, TrainerDAO trainerDAO) {
         this.trainingDAO = trainingDAO;
         this.traineeDAO = traineeDao;
         this.trainerDAO = trainerDAO;
-        this.trainingTypeDAO = trainingTypeDAO;
     }
 
     @Transactional
@@ -46,7 +42,7 @@ public class TrainingService {
         trainer.getTraineeList().add(trainee);
         trainee.getTrainerList().add(trainer);
 
-        TrainingType trainingType = trainingTypeDAO.findByTrainingTypeName(trainingCreateDTO.getTrainingTypeName());
+        TrainingType trainingType = trainingDAO.findTrainingTypeByName(trainingCreateDTO.getTrainingTypeName());
 
         Training training = Training.builder()
                 .trainee(trainee)
