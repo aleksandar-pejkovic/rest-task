@@ -67,8 +67,12 @@ public class AppConfig {
     }
 
     @Bean
-    public TrainingService trainingService(TrainingDAO trainingDAO, UserAuthentication authentication) {
-        return new TrainingService(trainingDAO, authentication);
+    public TrainingService trainingService(TrainingDAO trainingDAO,
+                                           TraineeDAO traineeDAO,
+                                           TrainerDAO trainerDAO,
+                                           TrainingTypeDAO trainingTypeDAO
+    ) {
+        return new TrainingService(trainingDAO, traineeDAO, trainerDAO, trainingTypeDAO);
     }
 
     @Bean

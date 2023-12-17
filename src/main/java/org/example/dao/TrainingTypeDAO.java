@@ -21,8 +21,8 @@ public class TrainingTypeDAO extends AbstractDAO<TrainingType> {
 
     public TrainingType findByTrainingTypeName(TrainingTypeName trainingTypeName) {
         Session session = sessionFactory.getCurrentSession();
-        Query<TrainingType> query = session.createQuery("FROM TrainingType t where t.trainingTypeName = " +
-                ":trainingTypeName", TrainingType.class);
+        Query<TrainingType> query = session.createQuery("FROM TrainingType t where t.trainingTypeName = "
+                + ":trainingTypeName", TrainingType.class);
         query.setParameter("trainingTypeName", trainingTypeName.name());
         return query.getSingleResult();
     }

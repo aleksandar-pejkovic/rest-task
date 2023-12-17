@@ -13,14 +13,21 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import org.example.dao.TraineeDAO;
+import org.example.dao.TrainerDAO;
 import org.example.dao.TrainingDAO;
+import org.example.dao.TrainingTypeDAO;
+import org.example.dto.training.TrainingCreateDTO;
+import org.example.enums.TrainingTypeName;
 import org.example.model.Trainee;
 import org.example.model.Trainer;
 import org.example.model.Training;
+import org.example.model.TrainingType;
 import org.example.model.User;
 import org.example.utils.UserAuthentication;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -29,6 +36,15 @@ class TrainingServiceTest {
 
     @Mock
     private TrainingDAO trainingDAO;
+
+    @Mock
+    private TraineeDAO traineeDAO;
+
+    @Mock
+    private TrainerDAO trainerDAO;
+
+    @Mock
+    private TrainingTypeDAO trainingTypeDAO;
 
     @Mock
     private UserAuthentication userAuthentication;
@@ -79,23 +95,39 @@ class TrainingServiceTest {
             training.setId(1L);
             training.setTrainee(trainee);
             training.setTrainer(trainer);
-
-            when(userAuthentication.authenticateUser(anyString(), anyString())).thenReturn(true);
+            training.setTrainingType(
+                    TrainingType.builder()
+                            .id(1L)
+                            .trainingTypeName(TrainingTypeName.AEROBIC)
+                            .build()
+            );
         }
     }
 
     @Test
     void createTraining() {
         // Arrange
+        TrainingCreateDTO trainingCreateDTO = TrainingCreateDTO.builder()
+                .traineeUsername(training.getTrainee().getUsername())
+                .trainerUsername(training.getTrainer().getUsername())
+                .trainingTypeName(training.getTrainingType().getTrainingTypeName())
+                .trainingDate(training.getTrainingDate())
+                .trainingDuration(training.getTrainingDuration())
+                .build();
+
+        when(traineeDAO.findByUsername(anyString())).thenReturn(trainee);
+        when(trainerDAO.findByUsername(anyString())).thenReturn(trainer);
+        when(trainingTypeDAO.findByTrainingTypeName(any())).thenReturn(training.getTrainingType());
         when(trainingDAO.saveTraining(any())).thenReturn(training);
 
         // Act
-        Training result = trainingService.createTraining(training);
+        boolean result = trainingService.createTraining(trainingCreateDTO);
 
         // Assert
-        verify(trainingDAO, times(1)).saveTraining(training);
-        assertEquals(trainee, result.getTrainee());
-        assertEquals(trainer, result.getTrainer());
+        ArgumentCaptor<Training> trainingCaptor = ArgumentCaptor.forClass(Training.class);
+        verify(trainingDAO, times(1)).saveTraining(trainingCaptor.capture());
+        assertTrue(result);
+        assertEquals(training.getTrainingDuration(), trainingCaptor.getValue().getTrainingDuration());
     }
 
     @Test

@@ -1,12 +1,17 @@
 package org.example.service;
 
 import java.util.List;
+import java.util.Optional;
 
+import org.example.dao.TraineeDAO;
+import org.example.dao.TrainerDAO;
 import org.example.dao.TrainingDAO;
+import org.example.dao.TrainingTypeDAO;
+import org.example.dto.training.TrainingCreateDTO;
 import org.example.model.Trainee;
 import org.example.model.Trainer;
 import org.example.model.Training;
-import org.example.utils.UserAuthentication;
+import org.example.model.TrainingType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,21 +24,42 @@ public class TrainingService {
 
     private final TrainingDAO trainingDAO;
 
-    private final UserAuthentication authentication;
+    private final TraineeDAO traineeDAO;
+
+    private final TrainerDAO trainerDAO;
+
+    private final TrainingTypeDAO trainingTypeDAO;
 
     @Autowired
-    public TrainingService(TrainingDAO trainingDAO, UserAuthentication authentication) {
+    public TrainingService(TrainingDAO trainingDAO, TraineeDAO traineeDao, TrainerDAO trainerDAO, TrainingTypeDAO trainingTypeDAO) {
         this.trainingDAO = trainingDAO;
-        this.authentication = authentication;
+        this.traineeDAO = traineeDao;
+        this.trainerDAO = trainerDAO;
+        this.trainingTypeDAO = trainingTypeDAO;
     }
 
     @Transactional
-    public Training createTraining(Training training) {
-        Trainee trainee = training.getTrainee();
-        Trainer trainer = training.getTrainer();
+    public boolean createTraining(TrainingCreateDTO trainingCreateDTO) {
+
+        Trainee trainee = traineeDAO.findByUsername(trainingCreateDTO.getTraineeUsername());
+        Trainer trainer = trainerDAO.findByUsername(trainingCreateDTO.getTrainerUsername());
         trainer.getTraineeList().add(trainee);
         trainee.getTrainerList().add(trainer);
-        return trainingDAO.saveTraining(training);
+
+        TrainingType trainingType = trainingTypeDAO.findByTrainingTypeName(trainingCreateDTO.getTrainingTypeName());
+
+        Training training = Training.builder()
+                .trainee(trainee)
+                .trainer(trainer)
+                .trainingName(trainingType.getTrainingTypeName().name())
+                .trainingType(trainingType)
+                .trainingDate(trainingCreateDTO.getTrainingDate())
+                .trainingDuration(trainingCreateDTO.getTrainingDuration())
+                .build();
+
+        Training savedTraining = trainingDAO.saveTraining(training);
+
+        return Optional.ofNullable(savedTraining).isPresent();
     }
 
     @Transactional(readOnly = true)

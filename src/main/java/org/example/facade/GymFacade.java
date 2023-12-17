@@ -140,11 +140,6 @@ public class GymFacade {
         List<Training> trainings = trainingService.getAllTrainings();
     }
 
-    public void createTraining(Training training) {
-        log.info("Creating training...");
-        trainingService.createTraining(training);
-    }
-
     public Training getTrainingById(Long trainingId) {
         log.info("Getting training by ID: {}", trainingId);
         return trainingService.getTrainingById(trainingId);

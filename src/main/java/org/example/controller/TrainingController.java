@@ -3,13 +3,16 @@ package org.example.controller;
 import java.util.Date;
 import java.util.List;
 
+import org.example.dto.training.TrainingCreateDTO;
 import org.example.dto.training.TrainingDTO;
 import org.example.enums.TrainingTypeName;
 import org.example.model.Training;
 import org.example.service.TrainingService;
 import org.example.utils.TrainingConverter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -48,5 +51,15 @@ public class TrainingController {
     ) {
         List<Training> trainings = trainingService.getTrainerTrainingList(username, trainingDuration);
         return TrainingConverter.convertToDtoList(trainings);
+    }
+
+    @PostMapping
+    public ResponseEntity<Boolean> addTraining(TrainingCreateDTO trainingCreateDTO) {
+        boolean successfullyAddedTraining = trainingService.createTraining(trainingCreateDTO);
+        if (successfullyAddedTraining) {
+            return ResponseEntity.ok(true);
+        } else {
+            return ResponseEntity.badRequest().body(false);
+        }
     }
 }
