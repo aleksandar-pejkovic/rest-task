@@ -2,6 +2,7 @@ package org.example.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.example.dao.TraineeDAO;
 import org.example.dto.credentials.CredentialsUpdateDTO;
@@ -76,21 +77,12 @@ public class TraineeService {
     }
 
     @Transactional
-    public Trainee activateTrainee(Trainee trainee) {
-        authentication.authenticateUser(trainee.getUsername(), trainee.getPassword());
-        trainee.activateAccount();
+    public boolean toggleTraineeActivation(String username, boolean isActive) {
+        Trainee trainee = traineeDAO.findTraineeByUsername(username);
+        trainee.getUser().setActive(isActive);
         Trainee updatedTrainee = traineeDAO.updateTrainee(trainee);
-        log.info("Activated account for trainee: {}", trainee);
-        return updatedTrainee;
-    }
-
-    @Transactional
-    public Trainee deactivateTrainee(Trainee trainee) {
-        authentication.authenticateUser(trainee.getUsername(), trainee.getPassword());
-        trainee.deactivateAccount();
-        Trainee updatedTrainee = traineeDAO.updateTrainee(trainee);
-        log.info("Deactivated account for trainee: {}", trainee);
-        return updatedTrainee;
+        log.info("Active account status for TRAINEE: {}, has been set to: {}", username, isActive);
+        return Optional.ofNullable(updatedTrainee).isPresent();
     }
 
     @Transactional

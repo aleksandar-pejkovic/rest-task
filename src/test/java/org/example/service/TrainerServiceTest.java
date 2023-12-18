@@ -154,29 +154,17 @@ class TrainerServiceTest {
     }
 
     @Test
-    void activateTrainer() {
+    void toggleTrainerActivationTest() {
         // Arrange
+        when(trainerDAO.findTrainerByUsername(anyString())).thenReturn(trainer);
         when(trainerDAO.updateTrainer(trainer)).thenReturn(trainer);
 
         // Act
-        Trainer result = trainerService.activateTrainer(trainer);
+        boolean result = trainerService.toggleTrainerActivation(trainer.getUsername(), trainer.getUser().isActive());
 
         // Assert
-        verify(userAuthentication, times(1)).authenticateUser(trainer.getUsername(), trainer.getPassword());
         verify(trainerDAO, times(1)).updateTrainer(trainer);
-    }
-
-    @Test
-    void deactivateTrainer() {
-        // Arrange
-        when(trainerDAO.updateTrainer(trainer)).thenReturn(trainer);
-
-        // Act
-        Trainer result = trainerService.deactivateTrainer(trainer);
-
-        // Assert
-        verify(userAuthentication, times(1)).authenticateUser(trainer.getUsername(), trainer.getPassword());
-        verify(trainerDAO, times(1)).updateTrainer(trainer);
+        assertTrue(result);
     }
 
     @Test

@@ -61,12 +61,4 @@ public class Trainer implements AbstractEntity {
     public void setPassword(String password) {
         this.getUser().setPassword(password);
     }
-
-    public void activateAccount() {
-        this.getUser().setActive(true);
-    }
-
-    public void deactivateAccount() {
-        this.getUser().setActive(false);
-    }
 }

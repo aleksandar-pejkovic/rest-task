@@ -15,6 +15,7 @@ import org.example.utils.TrainerConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -51,11 +52,9 @@ public class TrainerController {
     @PutMapping("/change-login")
     public ResponseEntity<Boolean> changeLogin(@RequestBody CredentialsUpdateDTO credentialsUpdateDTO) {
         Trainer trainerAfterUpdate = trainerService.changePassword(credentialsUpdateDTO);
-        if (credentialsUpdateDTO.getNewPassword().equals(trainerAfterUpdate.getPassword())) {
-            return ResponseEntity.ok(true);
-        } else {
-            return ResponseEntity.badRequest().body(false);
-        }
+        return (credentialsUpdateDTO.getNewPassword().equals(trainerAfterUpdate.getPassword()))
+                ? ResponseEntity.ok(true)
+                : ResponseEntity.badRequest().body(false);
     }
 
     @GetMapping
@@ -83,5 +82,14 @@ public class TrainerController {
     ) {
         List<Trainer> updatedTraineeTrainerList = trainerService.updateTraineeTrainerList(traineeUsername, trainerListDTO);
         return TrainerConverter.convertToEmbeddedDtoList(updatedTraineeTrainerList);
+    }
+
+    @PatchMapping
+    public ResponseEntity<Boolean> toggleTraineeActivation(@RequestParam String username,
+                                                           @RequestParam boolean isActive) {
+        boolean successfulRequest = trainerService.toggleTrainerActivation(username, isActive);
+        return successfulRequest
+                ? ResponseEntity.ok(true)
+                : ResponseEntity.badRequest().body(false);
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -50,11 +51,9 @@ public class TraineeController {
     @PutMapping("/change-login")
     public ResponseEntity<Boolean> changeLogin(@RequestBody CredentialsUpdateDTO credentialsUpdateDTO) {
         Trainee traineeAfterUpdate = traineeService.changePassword(credentialsUpdateDTO);
-        if (credentialsUpdateDTO.getNewPassword().equals(traineeAfterUpdate.getPassword())) {
-            return ResponseEntity.ok(true);
-        } else {
-            return ResponseEntity.badRequest().body(false);
-        }
+        return credentialsUpdateDTO.getNewPassword().equals(traineeAfterUpdate.getPassword())
+                ? ResponseEntity.ok(true)
+                : ResponseEntity.badRequest().body(false);
     }
 
     @GetMapping("/{username}")
@@ -72,10 +71,17 @@ public class TraineeController {
     @DeleteMapping
     public ResponseEntity<Boolean> deleteTraineeProfile(@RequestParam String username) {
         boolean successfulDeletion = traineeService.deleteTrainee(username);
-        if (successfulDeletion) {
-            return ResponseEntity.ok(true);
-        } else {
-            return ResponseEntity.badRequest().body(false);
-        }
+        return successfulDeletion
+                ? ResponseEntity.ok(true)
+                : ResponseEntity.badRequest().body(false);
+    }
+
+    @PatchMapping
+    public ResponseEntity<Boolean> toggleTraineeActivation(@RequestParam String username,
+                                                           @RequestParam boolean isActive) {
+        boolean successfulRequest = traineeService.toggleTraineeActivation(username, isActive);
+        return successfulRequest
+                ? ResponseEntity.ok(true)
+                : ResponseEntity.badRequest().body(false);
     }
 }

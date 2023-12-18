@@ -144,29 +144,17 @@ class TraineeServiceTest {
     }
 
     @Test
-    void activateTrainee() {
+    void toggleTraineeActivationTest() {
         // Arrange
+        when(traineeDAO.findTraineeByUsername(anyString())).thenReturn(trainee);
         when(traineeDAO.updateTrainee(trainee)).thenReturn(trainee);
 
         // Act
-        Trainee result = traineeService.activateTrainee(trainee);
+        boolean result = traineeService.toggleTraineeActivation(trainee.getUsername(), trainee.getUser().isActive());
 
         // Assert
-        verify(userAuthentication, times(1)).authenticateUser(trainee.getUsername(), trainee.getPassword());
         verify(traineeDAO, times(1)).updateTrainee(trainee);
-    }
-
-    @Test
-    void deactivateTrainee() {
-        // Arrange
-        when(traineeDAO.updateTrainee(trainee)).thenReturn(trainee);
-
-        // Act
-        Trainee result = traineeService.deactivateTrainee(trainee);
-
-        // Assert
-        verify(userAuthentication, times(1)).authenticateUser(trainee.getUsername(), trainee.getPassword());
-        verify(traineeDAO, times(1)).updateTrainee(trainee);
+        assertTrue(result);
     }
 
     @Test

@@ -73,16 +73,6 @@ public class GymFacade {
         return traineeService.updateTrainee(traineeUpdateDTO);
     }
 
-    public Trainee activateTrainee(Trainee trainee) {
-        log.info("Activating trainee...");
-        return traineeService.activateTrainee(trainee);
-    }
-
-    public Trainee deactivateTrainee(Trainee trainee) {
-        log.info("Deactivating trainee...");
-        return traineeService.deactivateTrainee(trainee);
-    }
-
     public void deleteTrainee(String username) {
         log.info("Deleting trainee with USERNAME: {}", username);
         traineeService.deleteTrainee(username);
@@ -114,16 +104,6 @@ public class GymFacade {
     public void updateTrainer(TrainerUpdateDTO trainerUpdateDTO) {
         log.info("Updating trainer...");
         trainerService.updateTrainer(trainerUpdateDTO);
-    }
-
-    public Trainer activateTrainer(Trainer trainer) {
-        log.info("Activating trainer...");
-        return trainerService.activateTrainer(trainer);
-    }
-
-    public Trainer deactivateTrainer(Trainer trainer) {
-        log.info("Deactivating trainer...");
-        return trainerService.deactivateTrainer(trainer);
     }
 
     public void deleteTrainer(String username, String password) {

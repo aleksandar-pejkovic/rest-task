@@ -27,10 +27,8 @@ public class LoginController {
                 credentialsDTO.getPassword()
         );
 
-        if (successfulAuthentication) {
-            return ResponseEntity.ok(true);
-        } else {
-            return ResponseEntity.badRequest().body(false);
-        }
+        return (successfulAuthentication)
+                ? ResponseEntity.ok(true)
+                : ResponseEntity.badRequest().body(false);
     }
 }

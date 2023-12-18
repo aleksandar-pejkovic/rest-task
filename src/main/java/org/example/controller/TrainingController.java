@@ -56,10 +56,8 @@ public class TrainingController {
     @PostMapping
     public ResponseEntity<Boolean> addTraining(TrainingCreateDTO trainingCreateDTO) {
         boolean successfullyAddedTraining = trainingService.createTraining(trainingCreateDTO);
-        if (successfullyAddedTraining) {
-            return ResponseEntity.ok(true);
-        } else {
-            return ResponseEntity.badRequest().body(false);
-        }
+        return (successfullyAddedTraining)
+                ? ResponseEntity.ok(true)
+                : ResponseEntity.badRequest().body(false);
     }
 }

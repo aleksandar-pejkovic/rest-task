@@ -1,6 +1,7 @@
 package org.example.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.example.dao.TraineeDAO;
 import org.example.dao.TrainerDAO;
@@ -86,22 +87,12 @@ public class TrainerService {
         return updatedTrainer;
     }
 
-    @Transactional
-    public Trainer activateTrainer(Trainer trainer) {
-        authentication.authenticateUser(trainer.getUsername(), trainer.getPassword());
-        trainer.activateAccount();
+    public boolean toggleTrainerActivation(String username, boolean isActive) {
+        Trainer trainer = trainerDAO.findTrainerByUsername(username);
+        trainer.getUser().setActive(isActive);
         Trainer updatedTrainer = trainerDAO.updateTrainer(trainer);
-        log.info("Activated account for trainer: {}", trainer);
-        return updatedTrainer;
-    }
-
-    @Transactional
-    public Trainer deactivateTrainer(Trainer trainer) {
-        authentication.authenticateUser(trainer.getUsername(), trainer.getPassword());
-        trainer.deactivateAccount();
-        Trainer updatedTrainer = trainerDAO.updateTrainer(trainer);
-        log.info("Deactivated account for trainer: {}", trainer);
-        return updatedTrainer;
+        log.info("Active account status for TRAINER: {}, has been set to: {}", username, isActive);
+        return Optional.ofNullable(updatedTrainer).isPresent();
     }
 
     @Transactional
