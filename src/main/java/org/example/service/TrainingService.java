@@ -37,8 +37,8 @@ public class TrainingService {
     @Transactional
     public boolean createTraining(TrainingCreateDTO trainingCreateDTO) {
 
-        Trainee trainee = traineeDAO.findByUsername(trainingCreateDTO.getTraineeUsername());
-        Trainer trainer = trainerDAO.findByUsername(trainingCreateDTO.getTrainerUsername());
+        Trainee trainee = traineeDAO.findTraineeByUsername(trainingCreateDTO.getTraineeUsername());
+        Trainer trainer = trainerDAO.findTrainerByUsername(trainingCreateDTO.getTrainerUsername());
         trainer.getTraineeList().add(trainee);
         trainee.getTrainerList().add(trainer);
 

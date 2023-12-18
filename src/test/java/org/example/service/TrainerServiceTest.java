@@ -95,13 +95,13 @@ class TrainerServiceTest {
         // Arrange
         String username = "testUser";
         Trainer expectedTrainer = new Trainer();
-        when(trainerDAO.findByUsername(username)).thenReturn(expectedTrainer);
+        when(trainerDAO.findTrainerByUsername(username)).thenReturn(expectedTrainer);
 
         // Act
         Trainer result = trainerService.getTrainerByUsername(username);
 
         // Assert
-        verify(trainerDAO, times(1)).findByUsername(username);
+        verify(trainerDAO, times(1)).findTrainerByUsername(username);
         assertEquals(expectedTrainer, result);
     }
 
@@ -135,7 +135,7 @@ class TrainerServiceTest {
                 .trainingTypeName(TrainingTypeName.AEROBIC)
                 .build();
 
-        when(trainerDAO.findByUsername(any())).thenReturn(trainer);
+        when(trainerDAO.findTrainerByUsername(any())).thenReturn(trainer);
         when(trainingDAO.findTrainingTypeByName(any())).thenReturn(trainingType);
         when(trainerDAO.updateTrainer(trainer)).thenReturn(trainer);
         TrainerUpdateDTO trainerUpdateDTO = TrainerUpdateDTO.builder()

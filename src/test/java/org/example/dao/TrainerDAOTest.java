@@ -82,7 +82,7 @@ class TrainerDAOTest {
         when(query.getSingleResult()).thenReturn(testTrainer);
 
         // Act
-        Trainer foundTrainer = trainerDAO.findByUsername("John.Smith");
+        Trainer foundTrainer = trainerDAO.findTrainerByUsername("John.Smith");
 
         // Assert
         assertEquals(testTrainer, foundTrainer);

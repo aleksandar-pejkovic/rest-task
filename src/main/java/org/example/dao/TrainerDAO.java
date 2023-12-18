@@ -24,11 +24,8 @@ public class TrainerDAO extends AbstractDAO<Trainer> {
         return save(trainer);
     }
 
-    public Trainer findByUsername(String username) {
-        Session session = sessionFactory.getCurrentSession();
-        Query<Trainer> query = session.createQuery("FROM Trainer t where t.user.username = :username", Trainer.class);
-        query.setParameter("username", username);
-        return query.getSingleResult();
+    public Trainer findTrainerByUsername(String username) {
+        return findByUsername(username, Trainer.class);
     }
 
     public Trainer updateTrainer(Trainer trainer) {
@@ -36,12 +33,7 @@ public class TrainerDAO extends AbstractDAO<Trainer> {
     }
 
     public boolean deleteTrainerByUsername(String username) {
-        Session session = sessionFactory.getCurrentSession();
-        Query<Long> query = session.createQuery("DELETE FROM Trainer t WHERE t.user.username = :username",
-                Long.class);
-        query.setParameter("username", username);
-
-        int rowsDeleted = query.executeUpdate();
+        int rowsDeleted = deleteByUsername(username, Trainer.class);
 
         if (rowsDeleted < 1) {
             log.error("Trainer not found for USERNAME: {}", username);

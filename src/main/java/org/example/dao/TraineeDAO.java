@@ -3,9 +3,7 @@ package org.example.dao;
 import java.util.List;
 
 import org.example.model.Trainee;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -24,11 +22,8 @@ public class TraineeDAO extends AbstractDAO<Trainee> {
         return save(trainee);
     }
 
-    public Trainee findByUsername(String username) {
-        Session session = sessionFactory.getCurrentSession();
-        Query<Trainee> query = session.createQuery("FROM Trainee t where t.user.username = :username", Trainee.class);
-        query.setParameter("username", username);
-        return query.getSingleResult();
+    public Trainee findTraineeByUsername(String username) {
+        return findByUsername(username, Trainee.class);
     }
 
     public Trainee updateTrainee(Trainee trainee) {
@@ -36,12 +31,7 @@ public class TraineeDAO extends AbstractDAO<Trainee> {
     }
 
     public boolean deleteTraineeByUsername(String username) {
-        Session session = sessionFactory.getCurrentSession();
-        Query<Long> query = session.createQuery("DELETE FROM Trainee t WHERE t.user.username = :username",
-                Long.class);
-        query.setParameter("username", username);
-
-        int rowsDeleted = query.executeUpdate();
+        int rowsDeleted = deleteByUsername(username, Trainee.class);
 
         if (rowsDeleted < 1) {
             log.error("Trainee not found for USERNAME: {}", username);

@@ -58,7 +58,7 @@ public class TrainerService {
 
     @Transactional(readOnly = true)
     public Trainer getTrainerByUsername(String username) {
-        Trainer trainer = trainerDAO.findByUsername(username);
+        Trainer trainer = trainerDAO.findTrainerByUsername(username);
         log.info("Retrieved Trainer by USERNAME {}: {}", username, trainer);
         return trainer;
     }
@@ -126,7 +126,7 @@ public class TrainerService {
 
     @Transactional
     public List<Trainer> updateTraineeTrainerList(String traineeUsername, TrainerListDTO trainerListDTO) {
-        Trainee trainee = traineeDAO.findByUsername(traineeUsername);
+        Trainee trainee = traineeDAO.findTraineeByUsername(traineeUsername);
         List<Trainer> trainers = trainerDAO.getAllTrainers().stream()
                 .filter(trainer -> trainerListDTO.getTrainerUsernameList().contains(trainer.getUsername()))
                 .toList();

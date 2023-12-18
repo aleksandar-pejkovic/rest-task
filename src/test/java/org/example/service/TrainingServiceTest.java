@@ -111,8 +111,8 @@ class TrainingServiceTest {
                 .trainingDuration(training.getTrainingDuration())
                 .build();
 
-        when(traineeDAO.findByUsername(anyString())).thenReturn(trainee);
-        when(trainerDAO.findByUsername(anyString())).thenReturn(trainer);
+        when(traineeDAO.findTraineeByUsername(anyString())).thenReturn(trainee);
+        when(trainerDAO.findTrainerByUsername(anyString())).thenReturn(trainer);
         when(trainingDAO.findTrainingTypeByName(any())).thenReturn(training.getTrainingType());
         when(trainingDAO.saveTraining(any())).thenReturn(training);
 

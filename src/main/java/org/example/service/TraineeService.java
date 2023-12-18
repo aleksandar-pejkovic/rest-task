@@ -46,7 +46,7 @@ public class TraineeService {
 
     @Transactional(readOnly = true)
     public Trainee getTraineeByUsername(String username) {
-        Trainee trainee = traineeDAO.findByUsername(username);
+        Trainee trainee = traineeDAO.findTraineeByUsername(username);
         log.info("Retrieved Trainee by USERNAME {}: {}", username, trainee);
         return trainee;
     }

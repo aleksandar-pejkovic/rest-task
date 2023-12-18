@@ -88,13 +88,13 @@ class TraineeServiceTest {
         // Arrange
         String username = "testUser";
         Trainee expectedTrainee = new Trainee();
-        when(traineeDAO.findByUsername(username)).thenReturn(expectedTrainee);
+        when(traineeDAO.findTraineeByUsername(username)).thenReturn(expectedTrainee);
 
         // Act
         Trainee result = traineeService.getTraineeByUsername(username);
 
         // Assert
-        verify(traineeDAO, times(1)).findByUsername(username);
+        verify(traineeDAO, times(1)).findTraineeByUsername(username);
         assertEquals(expectedTrainee, result);
     }
 
@@ -123,7 +123,7 @@ class TraineeServiceTest {
     @Test
     void updateTrainee() {
         // Arrange
-        when(traineeDAO.findByUsername(anyString())).thenReturn(trainee);
+        when(traineeDAO.findTraineeByUsername(anyString())).thenReturn(trainee);
         when(traineeDAO.updateTrainee(trainee)).thenReturn(trainee);
 
         // Act
