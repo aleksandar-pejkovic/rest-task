@@ -7,10 +7,12 @@ import org.example.dao.TraineeDAO;
 import org.example.dao.TrainerDAO;
 import org.example.dao.TrainingDAO;
 import org.example.dto.training.TrainingCreateDTO;
+import org.example.dto.trainingType.TrainingTypeDTO;
 import org.example.model.Trainee;
 import org.example.model.Trainer;
 import org.example.model.Training;
 import org.example.model.TrainingType;
+import org.example.utils.TrainingTypeConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -102,8 +104,14 @@ public class TrainingService {
     @Transactional(readOnly = true)
     public List<Training> getAllTrainings() {
         log.info("Reading trainings...");
-        List<Training> trainings = trainingDAO.getAllTrainings();
+        List<Training> trainings = trainingDAO.findAllTrainings();
         log.info("Retrieved all Trainings: {}", trainings);
         return trainings;
+    }
+
+    @Transactional(readOnly = true)
+    public List<TrainingTypeDTO> finaAllTrainingTypes() {
+        List<TrainingType> trainingTypes = trainingDAO.findAllTrainingTypes();
+        return TrainingTypeConverter.convertToDtoList(trainingTypes);
     }
 }

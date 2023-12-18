@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.example.dto.training.TrainingCreateDTO;
 import org.example.dto.training.TrainingDTO;
+import org.example.dto.trainingType.TrainingTypeDTO;
 import org.example.enums.TrainingTypeName;
 import org.example.model.Training;
 import org.example.service.TrainingService;
@@ -59,5 +60,10 @@ public class TrainingController {
         return (successfullyAddedTraining)
                 ? ResponseEntity.ok(true)
                 : ResponseEntity.badRequest().body(false);
+    }
+
+    @GetMapping("/training-types")
+    public List<TrainingTypeDTO> getAllTrainingTypes() {
+        return trainingService.finaAllTrainingTypes();
     }
 }

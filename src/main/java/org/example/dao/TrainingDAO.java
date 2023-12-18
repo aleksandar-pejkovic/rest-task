@@ -74,7 +74,7 @@ public class TrainingDAO extends AbstractDAO<Training> {
         }
     }
 
-    public List<Training> getAllTrainings() {
+    public List<Training> findAllTrainings() {
         List<Training> trainingList = findAll(Training.class);
         log.info("Retrieved all trainings. Count: {}", trainingList.size());
         return trainingList;
@@ -86,6 +86,12 @@ public class TrainingDAO extends AbstractDAO<Training> {
                 + ":trainingTypeName", TrainingType.class);
         query.setParameter("trainingTypeName", trainingTypeName.name());
         return query.getSingleResult();
+    }
+
+    public List<TrainingType> findAllTrainingTypes() {
+        Session session = sessionFactory.getCurrentSession();
+        Query<TrainingType> query = session.createQuery("FROM TrainingType", TrainingType.class);
+        return query.getResultList();
     }
 
     private List<Training> getTrainingList(String entityType, String username, int trainingDuration) {

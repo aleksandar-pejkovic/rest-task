@@ -199,13 +199,13 @@ class TrainingServiceTest {
     void getAllTrainings() {
         // Arrange
         List<Training> expectedTrainingList = Collections.singletonList(training);
-        when(trainingDAO.getAllTrainings()).thenReturn(expectedTrainingList);
+        when(trainingDAO.findAllTrainings()).thenReturn(expectedTrainingList);
 
         // Act
         List<Training> result = trainingService.getAllTrainings();
 
         // Assert
-        verify(trainingDAO, times(1)).getAllTrainings();
+        verify(trainingDAO, times(1)).findAllTrainings();
         assertEquals(expectedTrainingList, result);
     }
 

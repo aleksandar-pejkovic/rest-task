@@ -17,9 +17,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Properties;
 
-import org.apache.tomcat.dbcp.dbcp2.BasicDataSource;
 import org.example.model.Training;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -35,14 +33,10 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.orm.hibernate5.HibernateTransactionManager;
-import org.springframework.orm.hibernate5.LocalSessionFactoryBuilder;
 
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
 
 class TrainingDAOTest {
 
@@ -222,7 +216,7 @@ class TrainingDAOTest {
         when(query.getResultList()).thenReturn(Collections.singletonList(training));
 
         // Act
-        List<Training> trainings = trainingDAO.getAllTrainings();
+        List<Training> trainings = trainingDAO.findAllTrainings();
 
         // Assert
         assertEquals(1, trainings.size());
