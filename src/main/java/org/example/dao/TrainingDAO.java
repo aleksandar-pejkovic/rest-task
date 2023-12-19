@@ -1,6 +1,7 @@
 package org.example.dao;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,9 +25,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TrainingDAO extends AbstractDAO<Training> {
 
-    public static final String ENTITY_ATTRIBUTE = "user";
-    public static final String USER_ATTRIBUTE = "username";
-    public static final String TRAINING_ATTRIBUTE_FOR_CRITERIA = "trainingDuration";
+    public static final String TRAINEE_TYPE = "trainee";
+    public static final String TRAINER_TYPE = "trainer";
+    public static final String USER_ATTRIBUTE = "user";
+    public static final String USERNAME_ATTRIBUTE = "username";
+    public static final String TRAINING_DATE_ATTRIBUTE_FOR_CRITERIA = "trainingDate";
+    public static final String TRAINING_TYPE_ATTRIBUTE_FOR_CRITERIA = "trainingType";
+    public static final String TRAINING_TYPE_NAME_ATTRIBUTE_FOR_CRITERIA = "trainingTypeName";
 
     @Autowired
     public TrainingDAO(SessionFactory sessionFactory) {
@@ -47,12 +52,91 @@ public class TrainingDAO extends AbstractDAO<Training> {
         return training;
     }
 
-    public List<Training> getTraineeTrainingList(String username, int trainingDuration) {
-        return getTrainingList("trainee", username, trainingDuration);
+    public List<Training> getTraineeTrainingList(String username,
+                                                 Date periodFrom,
+                                                 Date periodTo,
+                                                 String trainerName,
+                                                 String trainingTypeName) {
+        Session session = sessionFactory.getCurrentSession();
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery<Training> criteriaQuery = criteriaBuilder.createQuery(Training.class);
+        Root<Training> root = criteriaQuery.from(Training.class);
+        List<Predicate> predicates = new ArrayList<>();
+        predicates.add(
+                criteriaBuilder
+                        .equal(
+                                root.get(TRAINEE_TYPE)
+                                        .get(USER_ATTRIBUTE)
+                                        .get(USERNAME_ATTRIBUTE),
+                                username)
+        );
+        predicates.add(
+                criteriaBuilder
+                        .greaterThan(
+                                root.get(TRAINING_DATE_ATTRIBUTE_FOR_CRITERIA),
+                                periodFrom)
+        );
+        predicates.add(
+                criteriaBuilder
+                        .lessThan(
+                                root.get(TRAINING_DATE_ATTRIBUTE_FOR_CRITERIA),
+                                periodTo)
+        );
+        predicates.add(
+                criteriaBuilder
+                        .equal(
+                                root.get(TRAINER_TYPE)
+                                        .get(USER_ATTRIBUTE)
+                                        .get(USERNAME_ATTRIBUTE),
+                                trainerName));
+        predicates.add(
+                criteriaBuilder
+                        .equal(
+                                root.get(TRAINING_TYPE_ATTRIBUTE_FOR_CRITERIA)
+                                        .get(TRAINING_TYPE_NAME_ATTRIBUTE_FOR_CRITERIA),
+                                trainingTypeName));
+        criteriaQuery.select(root).where(predicates.toArray(new Predicate[]{}));
+        return session.createQuery(criteriaQuery).getResultList();
     }
 
-    public List<Training> getTrainerTrainingList(String username, int trainingDuration) {
-        return getTrainingList("trainer", username, trainingDuration);
+    public List<Training> getTrainerTrainingList(String username,
+                                                 Date periodFrom,
+                                                 Date periodTo,
+                                                 String traineeName) {
+        Session session = sessionFactory.getCurrentSession();
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery<Training> criteriaQuery = criteriaBuilder.createQuery(Training.class);
+        Root<Training> root = criteriaQuery.from(Training.class);
+        List<Predicate> predicates = new ArrayList<>();
+        predicates.add(
+                criteriaBuilder
+                        .equal(
+                                root.get(TRAINER_TYPE)
+                                        .get(USER_ATTRIBUTE)
+                                        .get(USERNAME_ATTRIBUTE),
+                                username)
+        );
+        predicates.add(
+                criteriaBuilder
+                        .greaterThan(
+                                root.get(TRAINING_DATE_ATTRIBUTE_FOR_CRITERIA),
+                                periodFrom)
+        );
+        predicates.add(
+                criteriaBuilder
+                        .lessThan(
+                                root.get(TRAINING_DATE_ATTRIBUTE_FOR_CRITERIA),
+                                periodTo)
+        );
+        predicates.add(
+                criteriaBuilder
+                        .equal(
+                                root.get(TRAINEE_TYPE)
+                                        .get(USER_ATTRIBUTE)
+                                        .get(USERNAME_ATTRIBUTE),
+                                traineeName));
+        criteriaQuery.select(root).where(predicates.toArray(new Predicate[]{}));
+        return session.createQuery(criteriaQuery).getResultList();
     }
 
     public Training updateTraining(Training training) {
@@ -92,17 +176,5 @@ public class TrainingDAO extends AbstractDAO<Training> {
         Session session = sessionFactory.getCurrentSession();
         Query<TrainingType> query = session.createQuery("FROM TrainingType", TrainingType.class);
         return query.getResultList();
-    }
-
-    private List<Training> getTrainingList(String entityType, String username, int trainingDuration) {
-        Session session = sessionFactory.getCurrentSession();
-        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-        CriteriaQuery<Training> criteriaQuery = criteriaBuilder.createQuery(Training.class);
-        Root<Training> root = criteriaQuery.from(Training.class);
-        List<Predicate> predicates = new ArrayList<>();
-        predicates.add(criteriaBuilder.equal(root.get(entityType).get(ENTITY_ATTRIBUTE).get(USER_ATTRIBUTE), username));
-        predicates.add(criteriaBuilder.greaterThan(root.get(TRAINING_ATTRIBUTE_FOR_CRITERIA), trainingDuration));
-        criteriaQuery.select(root).where(predicates.toArray(new Predicate[]{}));
-        return session.createQuery(criteriaQuery).getResultList();
     }
 }

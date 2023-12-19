@@ -170,13 +170,19 @@ class TrainingServiceTest {
         // Arrange
         int trainingDuration = 10;
         List<Training> expectedTrainingList = Collections.singletonList(training);
-        when(trainingDAO.getTraineeTrainingList(trainee.getUsername(), trainingDuration)).thenReturn(expectedTrainingList);
+        when(trainingDAO.getTraineeTrainingList(anyString(), any(), any(), anyString(), anyString())).thenReturn(expectedTrainingList);
 
         // Act
-        List<Training> result = trainingService.getTraineeTrainingList(trainee.getUsername(), trainingDuration);
+        List<Training> result = trainingService.getTraineeTrainingList(
+                trainee.getUsername(),
+                new Date(),
+                new Date(),
+                training.getTrainer().getUsername(),
+                training.getTrainingType().getTrainingTypeName().name()
+        );
 
         // Assert
-        verify(trainingDAO, times(1)).getTraineeTrainingList(trainee.getUsername(), trainingDuration);
+        verify(trainingDAO, times(1)).getTraineeTrainingList(anyString(), any(), any(), anyString(), anyString());
         assertEquals(expectedTrainingList, result);
     }
 
@@ -185,13 +191,18 @@ class TrainingServiceTest {
         // Arrange
         int trainingDuration = 10;
         List<Training> expectedTrainingList = Collections.singletonList(training);
-        when(trainingDAO.getTrainerTrainingList(trainer.getUsername(), trainingDuration)).thenReturn(expectedTrainingList);
+        when(trainingDAO.getTrainerTrainingList(anyString(), any(), any(), anyString())).thenReturn(expectedTrainingList);
 
         // Act
-        List<Training> result = trainingService.getTrainerTrainingList(trainer.getUsername(), trainingDuration);
+        List<Training> result = trainingService.getTrainerTrainingList(
+                trainer.getUsername(),
+                new Date(),
+                new Date(),
+                training.getTrainee().getUsername()
+        );
 
         // Assert
-        verify(trainingDAO, times(1)).getTrainerTrainingList(trainer.getUsername(), trainingDuration);
+        verify(trainingDAO, times(1)).getTrainerTrainingList(anyString(), any(), any(), anyString());
         assertEquals(expectedTrainingList, result);
     }
 

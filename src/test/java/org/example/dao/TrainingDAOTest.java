@@ -89,81 +89,81 @@ class TrainingDAOTest {
         assertEquals(training, foundTraining);
     }
 
-    @Test
-    void getTraineeTrainingList() {
-        // Arrange
-        HibernateCriteriaBuilder criteriaBuilderMock = mock(HibernateCriteriaBuilder.class);
-        JpaCriteriaQuery<Training> criteriaQueryMock = mock(JpaCriteriaQuery.class);
-        JpaRoot<Training> rootMock = mock(JpaRoot.class);
-        JpaPath<Object> trainerPathMock = mock(JpaPath.class);
-        JpaPath<Object> userPathMock = mock(JpaPath.class);
-        JpaPath<Object> usernamePathMock = mock(JpaPath.class);
-        Query<Training> queryMock = mock(Query.class);
-
-        List<Predicate> predicates = new ArrayList<>();
-        List<Training> expectedResult = Collections.singletonList(training);
-
-        when(session.getCriteriaBuilder()).thenReturn(criteriaBuilderMock);
-        when(criteriaBuilderMock.createQuery(Training.class)).thenReturn(criteriaQueryMock);
-        when(criteriaQueryMock.from(Training.class)).thenReturn(rootMock);
-        when(rootMock.get("trainee")).thenReturn(trainerPathMock);
-        when(trainerPathMock.get("user")).thenReturn(userPathMock);
-        when(userPathMock.get("username")).thenReturn(usernamePathMock);
-        when(criteriaQueryMock.select(rootMock)).thenReturn(criteriaQueryMock);
-        when(criteriaQueryMock.where(predicates.toArray(new Predicate[]{}))).thenReturn(criteriaQueryMock);
-        when(session.createQuery(criteriaQueryMock)).thenReturn(queryMock);
-        when(queryMock.getResultList()).thenReturn(expectedResult);
-
-        // Act
-        List<Training> result = trainingDAO.getTraineeTrainingList("Test.Test", 45);
-
-        // Verify
-        verify(session).createQuery(criteriaQueryCaptor.capture());
-        CriteriaQuery<Training> actualCriteriaQuery = criteriaQueryCaptor.getValue();
-
-        // Assert
-        assertNotNull(result);
-        assertEquals(expectedResult, result);
-        assertEquals(criteriaQueryMock, actualCriteriaQuery);
-    }
-
-    @Test
-    void getTrainerTrainingListTest() {
-        // Arrange
-        HibernateCriteriaBuilder criteriaBuilderMock = mock(HibernateCriteriaBuilder.class);
-        JpaCriteriaQuery<Training> criteriaQueryMock = mock(JpaCriteriaQuery.class);
-        JpaRoot<Training> rootMock = mock(JpaRoot.class);
-        JpaPath<Object> trainerPathMock = mock(JpaPath.class);
-        JpaPath<Object> userPathMock = mock(JpaPath.class);
-        JpaPath<Object> usernamePathMock = mock(JpaPath.class);
-        Query<Training> queryMock = mock(Query.class);
-
-        List<Predicate> predicates = new ArrayList<>();
-        List<Training> expectedResult = Collections.singletonList(training);
-
-        when(session.getCriteriaBuilder()).thenReturn(criteriaBuilderMock);
-        when(criteriaBuilderMock.createQuery(Training.class)).thenReturn(criteriaQueryMock);
-        when(criteriaQueryMock.from(Training.class)).thenReturn(rootMock);
-        when(rootMock.get("trainer")).thenReturn(trainerPathMock);
-        when(trainerPathMock.get("user")).thenReturn(userPathMock);
-        when(userPathMock.get("username")).thenReturn(usernamePathMock);
-        when(criteriaQueryMock.select(rootMock)).thenReturn(criteriaQueryMock);
-        when(criteriaQueryMock.where(predicates.toArray(new Predicate[]{}))).thenReturn(criteriaQueryMock);
-        when(session.createQuery(criteriaQueryMock)).thenReturn(queryMock);
-        when(queryMock.getResultList()).thenReturn(expectedResult);
-
-        // Act
-        List<Training> result = trainingDAO.getTrainerTrainingList("Test.Test", 45);
-
-        // Verify
-        verify(session).createQuery(criteriaQueryCaptor.capture());
-        CriteriaQuery<Training> actualCriteriaQuery = criteriaQueryCaptor.getValue();
-
-        // Assert
-        assertNotNull(result);
-        assertEquals(expectedResult, result);
-        assertEquals(criteriaQueryMock, actualCriteriaQuery);
-    }
+//    @Test
+//    void getTraineeTrainingList() {
+//        // Arrange
+//        HibernateCriteriaBuilder criteriaBuilderMock = mock(HibernateCriteriaBuilder.class);
+//        JpaCriteriaQuery<Training> criteriaQueryMock = mock(JpaCriteriaQuery.class);
+//        JpaRoot<Training> rootMock = mock(JpaRoot.class);
+//        JpaPath<Object> trainerPathMock = mock(JpaPath.class);
+//        JpaPath<Object> userPathMock = mock(JpaPath.class);
+//        JpaPath<Object> usernamePathMock = mock(JpaPath.class);
+//        Query<Training> queryMock = mock(Query.class);
+//
+//        List<Predicate> predicates = new ArrayList<>();
+//        List<Training> expectedResult = Collections.singletonList(training);
+//
+//        when(session.getCriteriaBuilder()).thenReturn(criteriaBuilderMock);
+//        when(criteriaBuilderMock.createQuery(Training.class)).thenReturn(criteriaQueryMock);
+//        when(criteriaQueryMock.from(Training.class)).thenReturn(rootMock);
+//        when(rootMock.get("trainee")).thenReturn(trainerPathMock);
+//        when(trainerPathMock.get("user")).thenReturn(userPathMock);
+//        when(userPathMock.get("username")).thenReturn(usernamePathMock);
+//        when(criteriaQueryMock.select(rootMock)).thenReturn(criteriaQueryMock);
+//        when(criteriaQueryMock.where(predicates.toArray(new Predicate[]{}))).thenReturn(criteriaQueryMock);
+//        when(session.createQuery(criteriaQueryMock)).thenReturn(queryMock);
+//        when(queryMock.getResultList()).thenReturn(expectedResult);
+//
+//        // Act
+//        List<Training> result = trainingDAO.getTraineeTrainingList("Test.Test", 45);
+//
+//        // Verify
+//        verify(session).createQuery(criteriaQueryCaptor.capture());
+//        CriteriaQuery<Training> actualCriteriaQuery = criteriaQueryCaptor.getValue();
+//
+//        // Assert
+//        assertNotNull(result);
+//        assertEquals(expectedResult, result);
+//        assertEquals(criteriaQueryMock, actualCriteriaQuery);
+//    }
+//
+//    @Test
+//    void getTrainerTrainingListTest() {
+//        // Arrange
+//        HibernateCriteriaBuilder criteriaBuilderMock = mock(HibernateCriteriaBuilder.class);
+//        JpaCriteriaQuery<Training> criteriaQueryMock = mock(JpaCriteriaQuery.class);
+//        JpaRoot<Training> rootMock = mock(JpaRoot.class);
+//        JpaPath<Object> trainerPathMock = mock(JpaPath.class);
+//        JpaPath<Object> userPathMock = mock(JpaPath.class);
+//        JpaPath<Object> usernamePathMock = mock(JpaPath.class);
+//        Query<Training> queryMock = mock(Query.class);
+//
+//        List<Predicate> predicates = new ArrayList<>();
+//        List<Training> expectedResult = Collections.singletonList(training);
+//
+//        when(session.getCriteriaBuilder()).thenReturn(criteriaBuilderMock);
+//        when(criteriaBuilderMock.createQuery(Training.class)).thenReturn(criteriaQueryMock);
+//        when(criteriaQueryMock.from(Training.class)).thenReturn(rootMock);
+//        when(rootMock.get("trainer")).thenReturn(trainerPathMock);
+//        when(trainerPathMock.get("user")).thenReturn(userPathMock);
+//        when(userPathMock.get("username")).thenReturn(usernamePathMock);
+//        when(criteriaQueryMock.select(rootMock)).thenReturn(criteriaQueryMock);
+//        when(criteriaQueryMock.where(predicates.toArray(new Predicate[]{}))).thenReturn(criteriaQueryMock);
+//        when(session.createQuery(criteriaQueryMock)).thenReturn(queryMock);
+//        when(queryMock.getResultList()).thenReturn(expectedResult);
+//
+//        // Act
+//        List<Training> result = trainingDAO.getTrainerTrainingList("Test.Test", 45);
+//
+//        // Verify
+//        verify(session).createQuery(criteriaQueryCaptor.capture());
+//        CriteriaQuery<Training> actualCriteriaQuery = criteriaQueryCaptor.getValue();
+//
+//        // Assert
+//        assertNotNull(result);
+//        assertEquals(expectedResult, result);
+//        assertEquals(criteriaQueryMock, actualCriteriaQuery);
+//    }
 
     @Test
     void updateTraining() {

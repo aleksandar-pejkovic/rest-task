@@ -134,12 +134,4 @@ public class GymFacade {
         log.info("Deleting training with ID: {}", training.getId());
         return trainingService.deleteTraining(training);
     }
-
-    public List<Training> readTraineeTrainingList(String username, int trainingDuration) {
-        return trainingService.getTraineeTrainingList(username, trainingDuration);
-    }
-
-    public List<Training> readTrainerTrainingList(String username, int trainingDuration) {
-        return trainingService.getTrainerTrainingList(username, trainingDuration);
-    }
 }

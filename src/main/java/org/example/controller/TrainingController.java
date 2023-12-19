@@ -34,11 +34,15 @@ public class TrainingController {
             @RequestParam String username,
             @RequestParam(required = false) Date periodFrom,
             @RequestParam(required = false) Date periodTo,
-            @RequestParam(required = false) int trainingDuration,
             @RequestParam(required = false) String trainerName,
             @RequestParam(required = false) TrainingTypeName trainingType
     ) {
-        List<Training> trainings = trainingService.getTraineeTrainingList(username, trainingDuration);
+        List<Training> trainings = trainingService.getTraineeTrainingList(
+                username,
+                periodFrom,
+                periodTo,
+                trainerName,
+                trainingType.name());
         return TrainingConverter.convertToDtoList(trainings);
     }
 
@@ -47,10 +51,13 @@ public class TrainingController {
             @RequestParam String username,
             @RequestParam(required = false) Date periodFrom,
             @RequestParam(required = false) Date periodTo,
-            @RequestParam(required = false) int trainingDuration,
             @RequestParam(required = false) String traineeName
     ) {
-        List<Training> trainings = trainingService.getTrainerTrainingList(username, trainingDuration);
+        List<Training> trainings = trainingService.getTrainerTrainingList(
+                username,
+                periodFrom,
+                periodTo,
+                traineeName);
         return TrainingConverter.convertToDtoList(trainings);
     }
 

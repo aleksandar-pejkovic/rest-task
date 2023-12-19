@@ -1,5 +1,6 @@
 package org.example.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -86,17 +87,25 @@ public class TrainingService {
     }
 
     @Transactional(readOnly = true)
-    public List<Training> getTraineeTrainingList(String username, int trainingDuration) {
+    public List<Training> getTraineeTrainingList(String username,
+                                                 Date periodFrom,
+                                                 Date periodTo,
+                                                 String trainerName,
+                                                 String trainingTypeName) {
         log.info("Retrieving training list for trainee with USERNAME: {}", username);
-        List<Training> trainingList = trainingDAO.getTraineeTrainingList(username, trainingDuration);
+        List<Training> trainingList = trainingDAO.getTraineeTrainingList(username, periodFrom, periodTo,
+                trainerName, trainingTypeName);
         log.info("Successfully retrieved training list: {}", trainingList);
         return trainingList;
     }
 
     @Transactional(readOnly = true)
-    public List<Training> getTrainerTrainingList(String username, int trainingDuration) {
+    public List<Training> getTrainerTrainingList(String username,
+                                                 Date periodFrom,
+                                                 Date periodTo,
+                                                 String traineeName) {
         log.info("Retrieving training list for trainer with USERNAME: {}", username);
-        List<Training> trainingList = trainingDAO.getTrainerTrainingList(username, trainingDuration);
+        List<Training> trainingList = trainingDAO.getTrainerTrainingList(username, periodFrom, periodTo, traineeName);
         log.info("Successfully retrieved training list: {}", trainingList);
         return trainingList;
     }
