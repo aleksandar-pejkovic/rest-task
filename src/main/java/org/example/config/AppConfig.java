@@ -7,17 +7,17 @@ import org.example.controller.TrainingController;
 import org.example.dao.TraineeDAO;
 import org.example.dao.TrainerDAO;
 import org.example.dao.TrainingDAO;
+import org.example.dao.UserDAO;
 import org.example.facade.GymFacade;
-import org.example.service.AuthenticationService;
 import org.example.service.TraineeService;
 import org.example.service.TrainerService;
 import org.example.service.TrainingService;
 import org.example.utils.CredentialsGenerator;
-import org.example.utils.UserAuthentication;
 import org.hibernate.SessionFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 
 @Configuration
 @ComponentScan(basePackages = "org.example")
@@ -26,11 +26,6 @@ public class AppConfig {
     @Bean
     public CredentialsGenerator credentialsGenerator(SessionFactory sessionFactory) {
         return new CredentialsGenerator(sessionFactory);
-    }
-
-    @Bean
-    public UserAuthentication userAuthentication(SessionFactory sessionFactory) {
-        return new UserAuthentication(sessionFactory);
     }
 
     @Bean
@@ -46,6 +41,11 @@ public class AppConfig {
     @Bean
     public TrainingDAO trainingDAO(SessionFactory sessionFactory) {
         return new TrainingDAO(sessionFactory);
+    }
+
+    @Bean
+    public UserDAO userDAO(SessionFactory sessionFactory) {
+        return new UserDAO(sessionFactory);
     }
 
     @Bean
@@ -68,11 +68,6 @@ public class AppConfig {
     }
 
     @Bean
-    public AuthenticationService authenticationService(UserAuthentication userAuthentication) {
-        return new AuthenticationService(userAuthentication);
-    }
-
-    @Bean
     public TraineeController traineeController(TraineeService traineeService) {
         return new TraineeController(traineeService);
     }
@@ -88,8 +83,8 @@ public class AppConfig {
     }
 
     @Bean
-    public LoginController loginController(AuthenticationService authenticationService) {
-        return new LoginController(authenticationService);
+    public LoginController loginController(AuthenticationManager authenticationManager) {
+        return new LoginController(authenticationManager);
     }
 
     @Bean

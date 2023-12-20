@@ -23,7 +23,6 @@ import org.example.model.Trainer;
 import org.example.model.Training;
 import org.example.model.TrainingType;
 import org.example.model.User;
-import org.example.utils.UserAuthentication;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -41,9 +40,6 @@ class TrainingServiceTest {
 
     @Mock
     private TrainerDAO trainerDAO;
-
-    @Mock
-    private UserAuthentication userAuthentication;
 
     @InjectMocks
     private TrainingService trainingService;
