@@ -27,6 +27,7 @@ public class LoginController {
 
     @PostMapping("/login")
     public ResponseEntity<Boolean> login(@RequestBody CredentialsDTO credentialsDTO) {
+        log.info("Endpoint '/api/login' was called to authenticate trainee");
         try {
             Authentication authenticationRequest = UsernamePasswordAuthenticationToken.unauthenticated(
                     credentialsDTO.getUsername(),

@@ -8,7 +8,6 @@ import org.example.dao.TraineeDAO;
 import org.example.dao.TrainerDAO;
 import org.example.dao.TrainingDAO;
 import org.example.dao.UserDAO;
-import org.example.facade.GymFacade;
 import org.example.service.TraineeService;
 import org.example.service.TrainerService;
 import org.example.service.TrainingService;
@@ -85,14 +84,5 @@ public class AppConfig {
     @Bean
     public LoginController loginController(AuthenticationManager authenticationManager) {
         return new LoginController(authenticationManager);
-    }
-
-    @Bean
-    public GymFacade gymFacade(
-            TraineeService traineeService,
-            TrainerService trainerService,
-            TrainingService trainingService
-    ) {
-        return new GymFacade(traineeService, trainerService, trainingService);
     }
 }
