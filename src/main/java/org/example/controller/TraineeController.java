@@ -22,6 +22,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestController
 @RequestMapping(value = "/api/trainees", consumes = {"application/JSON"}, produces = {"application/JSON"})
 public class TraineeController {
@@ -40,6 +43,7 @@ public class TraineeController {
             @RequestParam(required = false) Date dateOfBirth,
             @RequestParam(required = false) String address
     ) {
+        log.info("Endpoint '/api/trainees' was called to register trainee");
         Trainee savedTrainee = traineeService.createTrainee(firstName, lastName, dateOfBirth, address);
 
         return CredentialsDTO.builder()
@@ -50,6 +54,7 @@ public class TraineeController {
 
     @PutMapping("/change-login")
     public ResponseEntity<Boolean> changeLogin(@RequestBody CredentialsUpdateDTO credentialsUpdateDTO) {
+        log.info("Endpoint '/api/trainees/change-login' was called to update trainee's credentials");
         Trainee traineeAfterUpdate = traineeService.changePassword(credentialsUpdateDTO);
         return credentialsUpdateDTO.getNewPassword().equals(traineeAfterUpdate.getPassword())
                 ? ResponseEntity.ok(true)
@@ -58,18 +63,21 @@ public class TraineeController {
 
     @GetMapping("/{username}")
     public TraineeDTO getTraineeByUsername(@PathVariable String username) {
+        log.info("Endpoint '/api/trainees/{username}' was called to get trainee by username");
         Trainee trainee = traineeService.getTraineeByUsername(username);
         return TraineeConverter.convertToDto(trainee);
     }
 
     @PutMapping
     public TraineeDTO updateTraineeProfile(@RequestBody TraineeUpdateDTO traineeUpdateDTO) {
+        log.info("Endpoint '/api/trainees' was called to update trainee profile");
         Trainee updatedTrainee = traineeService.updateTrainee(traineeUpdateDTO);
         return TraineeConverter.convertToDto(updatedTrainee);
     }
 
     @DeleteMapping
     public ResponseEntity<Boolean> deleteTraineeProfile(@RequestParam String username) {
+        log.info("Endpoint '/api/trainees' was called to delete trainee profile");
         boolean successfulDeletion = traineeService.deleteTrainee(username);
         return successfulDeletion
                 ? ResponseEntity.ok(true)
@@ -79,6 +87,7 @@ public class TraineeController {
     @PatchMapping
     public ResponseEntity<Boolean> toggleTraineeActivation(@RequestParam String username,
                                                            @RequestParam boolean isActive) {
+        log.info("Endpoint '/api/trainees' was called to toggle trainee's activation status");
         boolean successfulRequest = traineeService.toggleTraineeActivation(username, isActive);
         return successfulRequest
                 ? ResponseEntity.ok(true)

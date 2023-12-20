@@ -24,6 +24,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestController
 @RequestMapping(value = "/api/trainers", consumes = {"application/JSON"}, produces = {"application/JSON"})
 public class TrainerController {
@@ -41,6 +44,7 @@ public class TrainerController {
             @RequestParam String lastName,
             @RequestParam TrainingTypeName specialization
     ) {
+        log.info("Endpoint '/api/trainers' was called to register trainer profile");
         Trainer savedTrainer = trainerService.createTrainer(firstName, lastName, specialization);
 
         return CredentialsDTO.builder()
@@ -51,26 +55,30 @@ public class TrainerController {
 
     @PutMapping("/change-login")
     public ResponseEntity<Boolean> changeLogin(@RequestBody CredentialsUpdateDTO credentialsUpdateDTO) {
+        log.info("Endpoint '/api/trainers/change-login' was called to update trainers credentials");
         Trainer trainerAfterUpdate = trainerService.changePassword(credentialsUpdateDTO);
         return (credentialsUpdateDTO.getNewPassword().equals(trainerAfterUpdate.getPassword()))
                 ? ResponseEntity.ok(true)
                 : ResponseEntity.badRequest().body(false);
     }
 
-    @GetMapping
-    public TrainerDTO getTrainerByUsername(@RequestParam String username) {
+    @GetMapping("/{username}")
+    public TrainerDTO getTrainerByUsername(@PathVariable String username) {
+        log.info("Endpoint '/api/trainers/{username}' was called to get trainer by username");
         Trainer trainer = trainerService.getTrainerByUsername(username);
         return TrainerConverter.convertToDto(trainer);
     }
 
     @PutMapping
-    public TrainerDTO updateTraineeProfile(@RequestBody TrainerUpdateDTO trainerUpdateDTO) {
+    public TrainerDTO updateTrainerProfile(@RequestBody TrainerUpdateDTO trainerUpdateDTO) {
+        log.info("Endpoint '/api/trainers' was called to update trainer profile");
         Trainer updatedTrainer = trainerService.updateTrainer(trainerUpdateDTO);
         return TrainerConverter.convertToDto(updatedTrainer);
     }
 
     @GetMapping("/unassigned")
     public List<TrainerEmbeddedDTO> getNotAssignedOnTrainee(@RequestParam String traineeUsername) {
+        log.info("Endpoint '/api/trainers/unassigned' was called to get a list of unassigned trainers");
         List<Trainer> unassignedTrainers = trainerService.getNotAssignedTrainerList(traineeUsername);
         return TrainerConverter.convertToEmbeddedDtoList(unassignedTrainers);
     }
@@ -80,6 +88,8 @@ public class TrainerController {
             @PathVariable String traineeUsername,
             @RequestBody TrainerListDTO trainerListDTO
     ) {
+        log.info("Endpoint '/api/trainers/{traineeUsername}/updateTrainers' was called to update trainee's trainer "
+                + "list");
         List<Trainer> updatedTraineeTrainerList = trainerService.updateTraineeTrainerList(traineeUsername, trainerListDTO);
         return TrainerConverter.convertToEmbeddedDtoList(updatedTraineeTrainerList);
     }
@@ -87,6 +97,7 @@ public class TrainerController {
     @PatchMapping
     public ResponseEntity<Boolean> toggleTraineeActivation(@RequestParam String username,
                                                            @RequestParam boolean isActive) {
+        log.info("Endpoint '/api/trainees' was called to toggle trainer's activation status");
         boolean successfulRequest = trainerService.toggleTrainerActivation(username, isActive);
         return successfulRequest
                 ? ResponseEntity.ok(true)
