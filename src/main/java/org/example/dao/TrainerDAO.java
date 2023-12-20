@@ -9,10 +9,7 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import lombok.extern.slf4j.Slf4j;
-
 @Repository
-@Slf4j
 public class TrainerDAO extends AbstractDAO<Trainer> {
 
     @Autowired
@@ -34,14 +31,7 @@ public class TrainerDAO extends AbstractDAO<Trainer> {
 
     public boolean deleteTrainerByUsername(String username) {
         int rowsDeleted = deleteByUsername(username, Trainer.class);
-
-        if (rowsDeleted < 1) {
-            log.error("Trainer not found for USERNAME: {}", username);
-            return false;
-        } else {
-            log.info("Trainer deleted successfully. USERNAME: {}", username);
-            return true;
-        }
+        return rowsDeleted >= 1;
     }
 
     public List<Trainer> getNotAssignedTrainers(String traineeUsername) {
@@ -56,9 +46,7 @@ public class TrainerDAO extends AbstractDAO<Trainer> {
         Query<Trainer> query = session.createQuery(hql, Trainer.class);
         query.setParameter("traineeUsername", traineeUsername);
 
-        List<Trainer> trainerList = query.getResultList();
-        log.info("Successfully retrieved unassigned trainers list: {}", trainerList);
-        return trainerList;
+        return query.getResultList();
     }
 
     public List<Trainer> getAllTrainers() {

@@ -7,10 +7,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import lombok.extern.slf4j.Slf4j;
-
 @Repository
-@Slf4j
 public class TraineeDAO extends AbstractDAO<Trainee> {
 
     @Autowired
@@ -32,14 +29,7 @@ public class TraineeDAO extends AbstractDAO<Trainee> {
 
     public boolean deleteTraineeByUsername(String username) {
         int rowsDeleted = deleteByUsername(username, Trainee.class);
-
-        if (rowsDeleted < 1) {
-            log.error("Trainee not found for USERNAME: {}", username);
-            return false;
-        } else {
-            log.info("Trainee deleted successfully. USERNAME: {}", username);
-            return true;
-        }
+        return rowsDeleted >= 1;
     }
 
     public List<Trainee> getAllTrainees() {

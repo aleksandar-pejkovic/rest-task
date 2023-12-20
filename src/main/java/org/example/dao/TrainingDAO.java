@@ -3,7 +3,6 @@ package org.example.dao;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 import org.example.enums.TrainingTypeName;
 import org.example.model.Training;
@@ -19,10 +18,8 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
-import lombok.extern.slf4j.Slf4j;
 
 @Repository
-@Slf4j
 public class TrainingDAO extends AbstractDAO<Training> {
 
     public static final String TRAINEE_TYPE = "trainee";
@@ -43,13 +40,7 @@ public class TrainingDAO extends AbstractDAO<Training> {
     }
 
     public Training findById(long id) {
-        Training training = findById(Training.class, id);
-        if (Optional.ofNullable(training).isEmpty()) {
-            log.error("Training not found by ID: {}", id);
-            return new Training();
-        }
-        log.error("Training found by ID: {}", id);
-        return training;
+        return findById(Training.class, id);
     }
 
     public List<Training> getTraineeTrainingList(String username,
@@ -140,9 +131,7 @@ public class TrainingDAO extends AbstractDAO<Training> {
     }
 
     public Training updateTraining(Training training) {
-        Training updatedTraining = update(training);
-        log.info("Training updated successfully. ID: {}", updatedTraining.getId());
-        return updatedTraining;
+        return update(training);
     }
 
     public boolean deleteTraining(Training training) {
@@ -150,18 +139,14 @@ public class TrainingDAO extends AbstractDAO<Training> {
         try {
             session.merge(training);
             session.remove(training);
-            log.info("Training deleted successfully. ID: {}", training.getId());
             return true;
         } catch (EntityNotFoundException e) {
-            log.error("there was an error. Training was not deleted. ID: {}", training.getId(), e);
             return false;
         }
     }
 
     public List<Training> findAllTrainings() {
-        List<Training> trainingList = findAll(Training.class);
-        log.info("Retrieved all trainings. Count: {}", trainingList.size());
-        return trainingList;
+        return findAll(Training.class);
     }
 
     public TrainingType findTrainingTypeByName(TrainingTypeName trainingTypeName) {
