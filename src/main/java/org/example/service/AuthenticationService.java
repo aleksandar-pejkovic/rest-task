@@ -18,7 +18,12 @@ public class AuthenticationService {
     }
 
     public boolean authenticateUser(String username, String password) {
-        log.info("User authentication in progress...");
-        return userAuthentication.authenticateUser(username, password);
+        boolean authenticationResult = userAuthentication.authenticateUser(username, password);
+        if (authenticationResult) {
+            log.info("User successfully authenticated");
+        } else {
+            log.warn("Authentication failed");
+        }
+        return authenticationResult;
     }
 }

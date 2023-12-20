@@ -57,21 +57,21 @@ public class TrainingService {
                 .build();
 
         Training savedTraining = trainingDAO.saveTraining(training);
-
+        log.info("Training successfully created");
         return Optional.ofNullable(savedTraining).isPresent();
     }
 
     @Transactional(readOnly = true)
     public Training getTrainingById(long id) {
         Training training = trainingDAO.findById(id);
-        log.info("Retrieved Training by ID {}: {}", id, training);
+        log.info("Training successfully retrieved by id");
         return training;
     }
 
     @Transactional
     public Training updateTraining(Training training) {
         Training updatedTraining = trainingDAO.updateTraining(training);
-        log.info("Training updated: {}", training);
+        log.info("Training successfully updated");
         return updatedTraining;
     }
 
@@ -82,7 +82,7 @@ public class TrainingService {
         trainer.getTraineeList().remove(trainee);
         trainee.getTrainerList().remove(trainer);
         boolean result = trainingDAO.deleteTraining(training);
-        log.info("Training deleted with ID: {}", training.getId());
+        log.info("Training successfully deleted");
         return result;
     }
 
@@ -92,10 +92,9 @@ public class TrainingService {
                                                  Date periodTo,
                                                  String trainerName,
                                                  String trainingTypeName) {
-        log.info("Retrieving training list for trainee with USERNAME: {}", username);
         List<Training> trainingList = trainingDAO.getTraineeTrainingList(username, periodFrom, periodTo,
                 trainerName, trainingTypeName);
-        log.info("Successfully retrieved training list: {}", trainingList);
+        log.info("Successfully retrieved trainee's training list");
         return trainingList;
     }
 
@@ -104,23 +103,22 @@ public class TrainingService {
                                                  Date periodFrom,
                                                  Date periodTo,
                                                  String traineeName) {
-        log.info("Retrieving training list for trainer with USERNAME: {}", username);
         List<Training> trainingList = trainingDAO.getTrainerTrainingList(username, periodFrom, periodTo, traineeName);
-        log.info("Successfully retrieved training list: {}", trainingList);
+        log.info("Successfully retrieved trainer's training list");
         return trainingList;
     }
 
     @Transactional(readOnly = true)
     public List<Training> getAllTrainings() {
-        log.info("Reading trainings...");
         List<Training> trainings = trainingDAO.findAllTrainings();
-        log.info("Retrieved all Trainings: {}", trainings);
+        log.info("Retrieved all trainings successfully");
         return trainings;
     }
 
     @Transactional(readOnly = true)
     public List<TrainingTypeDTO> finaAllTrainingTypes() {
         List<TrainingType> trainingTypes = trainingDAO.findAllTrainingTypes();
+        log.info("Retrieved all training types successfully");
         return TrainingTypeConverter.convertToDtoList(trainingTypes);
     }
 }

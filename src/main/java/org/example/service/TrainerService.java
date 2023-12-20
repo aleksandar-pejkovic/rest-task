@@ -54,13 +54,15 @@ public class TrainerService {
         String password = generator.generateRandomPassword();
         newTrainer.setUsername(username);
         newTrainer.setPassword(password);
-        return trainerDAO.saveTrainer(newTrainer);
+        Trainer savedTrained = trainerDAO.saveTrainer(newTrainer);
+        log.info("Trainer successfully saved");
+        return savedTrained;
     }
 
     @Transactional(readOnly = true)
     public Trainer getTrainerByUsername(String username) {
         Trainer trainer = trainerDAO.findTrainerByUsername(username);
-        log.info("Retrieved Trainer by USERNAME {}: {}", username, trainer);
+        log.info("Successfully retrieved trainer by username");
         return trainer;
     }
 
@@ -70,7 +72,7 @@ public class TrainerService {
         Trainer trainer = getTrainerByUsername(credentialsUpdateDTO.getUsername());
         trainer.setPassword(credentialsUpdateDTO.getNewPassword());
         Trainer updatedTrainer = trainerDAO.updateTrainer(trainer);
-        log.info("Password updated for trainer: {}", trainer);
+        log.info("Password successfully updated");
         return updatedTrainer;
     }
 
@@ -83,7 +85,7 @@ public class TrainerService {
         trainer.setSpecialization(trainingType);
         trainer.getUser().setActive(trainerUpdateDTO.isActive());
         Trainer updatedTrainer = trainerDAO.updateTrainer(trainer);
-        log.info("Trainer updated: {}", updatedTrainer);
+        log.info("Trainer successfully updated");
         return updatedTrainer;
     }
 
@@ -91,27 +93,39 @@ public class TrainerService {
         Trainer trainer = trainerDAO.findTrainerByUsername(username);
         trainer.getUser().setActive(isActive);
         Trainer updatedTrainer = trainerDAO.updateTrainer(trainer);
-        log.info("Active account status for TRAINER: {}, has been set to: {}", username, isActive);
-        return Optional.ofNullable(updatedTrainer).isPresent();
+        if (Optional.ofNullable(updatedTrainer).isPresent()) {
+            log.info("Trainer's activation status successfully updated");
+            return true;
+        } else {
+            log.info("Activation status update failed. Trainer not found.");
+            return false;
+        }
     }
 
     @Transactional
     public boolean deleteTrainer(String username, String password) {
         authentication.authenticateUser(username, password);
-        log.info("Deleting trainer with USERNAME: {}", username);
-        return trainerDAO.deleteTrainerByUsername(username);
+        boolean deletionResult = trainerDAO.deleteTrainerByUsername(username);
+        if (deletionResult) {
+            log.info("Trainer successfully deleted");
+            return true;
+        } else {
+            log.info("Trainer deletion failed");
+            return false;
+        }
     }
 
     @Transactional(readOnly = true)
     public List<Trainer> getNotAssignedTrainerList(String traineeUsername) {
-        log.info("Retrieving trainer list for trainee with USERNAME: {}", traineeUsername);
-        return trainerDAO.getNotAssignedTrainers(traineeUsername);
+        List<Trainer> unassignedTrainers = trainerDAO.getNotAssignedTrainers(traineeUsername);
+        log.info("Successfully retrieved unassigned trainers");
+        return unassignedTrainers;
     }
 
     @Transactional(readOnly = true)
     public List<Trainer> getAllTrainers() {
         List<Trainer> trainers = trainerDAO.getAllTrainers();
-        log.info("Retrieved all Trainers: {}", trainers);
+        log.info("Successfully retrieved all trainers");
         return trainers;
     }
 
@@ -122,8 +136,9 @@ public class TrainerService {
                 .filter(trainer -> trainerListDTO.getTrainerUsernameList().contains(trainer.getUsername()))
                 .toList();
         trainee.getTrainerList().addAll(trainers);
-        traineeDAO.updateTrainee(trainee);
-        return trainee.getTrainerList();
+        Trainee updatedTrainee = traineeDAO.updateTrainee(trainee);
+        log.info("Successfully updated trainee's trainers list");
+        return updatedTrainee.getTrainerList();
     }
 
     private User buildNewUser(String firstName, String lastName) {

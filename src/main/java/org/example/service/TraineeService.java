@@ -42,13 +42,15 @@ public class TraineeService {
         String password = generator.generateRandomPassword();
         newTrainee.setUsername(username);
         newTrainee.setPassword(password);
-        return traineeDAO.saveTrainee(newTrainee);
+        Trainee savedTrainee = traineeDAO.saveTrainee(newTrainee);
+        log.info("Trainee successfully created");
+        return savedTrainee;
     }
 
     @Transactional(readOnly = true)
     public Trainee getTraineeByUsername(String username) {
         Trainee trainee = traineeDAO.findTraineeByUsername(username);
-        log.info("Retrieved Trainee by USERNAME {}: {}", username, trainee);
+        log.info("Trainee successfully retrieved");
         return trainee;
     }
 
@@ -58,7 +60,7 @@ public class TraineeService {
         Trainee trainee = getTraineeByUsername(credentialsUpdateDTO.getUsername());
         trainee.setPassword(credentialsUpdateDTO.getNewPassword());
         Trainee updatedTrainee = traineeDAO.updateTrainee(trainee);
-        log.info("Password updated for trainee: {}", trainee);
+        log.info("Password successfully changed");
         return updatedTrainee;
     }
 
@@ -72,7 +74,7 @@ public class TraineeService {
         trainee.getUser().setActive(traineeUpdateDTO.isActive());
         authentication.authenticateUser(trainee.getUsername(), trainee.getPassword());
         Trainee updatedTrainee = traineeDAO.updateTrainee(trainee);
-        log.info("Trainee updated: {}", trainee);
+        log.info("Trainee successfully updated");
         return updatedTrainee;
     }
 
@@ -81,19 +83,25 @@ public class TraineeService {
         Trainee trainee = traineeDAO.findTraineeByUsername(username);
         trainee.getUser().setActive(isActive);
         Trainee updatedTrainee = traineeDAO.updateTrainee(trainee);
-        log.info("Active account status for TRAINEE: {}, has been set to: {}", username, isActive);
+        log.info("Activation status successfully updated");
         return Optional.ofNullable(updatedTrainee).isPresent();
     }
 
     @Transactional
     public boolean deleteTrainee(String username) {
-        return traineeDAO.deleteTraineeByUsername(username);
+        boolean deletionResult = traineeDAO.deleteTraineeByUsername(username);
+        if (deletionResult) {
+            log.info("Trainee successfully deleted");
+        } else {
+            log.warn("Trainee deletion failed. No such Trainee found.");
+        }
+        return deletionResult;
     }
 
     @Transactional(readOnly = true)
     public List<Trainee> getAllTrainees() {
         List<Trainee> trainees = traineeDAO.getAllTrainees();
-        log.info("Retrieved all Trainees: {}", trainees);
+        log.info("Successfully retrieved all Trainees");
         return trainees;
     }
 
