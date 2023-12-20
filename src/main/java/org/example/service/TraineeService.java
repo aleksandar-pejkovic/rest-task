@@ -10,7 +10,6 @@ import org.example.dto.trainee.TraineeUpdateDTO;
 import org.example.model.Trainee;
 import org.example.model.User;
 import org.example.utils.CredentialsGenerator;
-import org.example.utils.UserAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,13 +24,10 @@ public class TraineeService {
 
     private final CredentialsGenerator generator;
 
-    private final UserAuthentication authentication;
-
     @Autowired
-    public TraineeService(TraineeDAO traineeDAO, CredentialsGenerator credentialsGenerator, UserAuthentication authentication) {
+    public TraineeService(TraineeDAO traineeDAO, CredentialsGenerator credentialsGenerator) {
         this.traineeDAO = traineeDAO;
         this.generator = credentialsGenerator;
-        this.authentication = authentication;
     }
 
     @Transactional
@@ -56,7 +52,6 @@ public class TraineeService {
 
     @Transactional
     public Trainee changePassword(CredentialsUpdateDTO credentialsUpdateDTO) {
-        authentication.authenticateUser(credentialsUpdateDTO.getUsername(), credentialsUpdateDTO.getOldPassword());
         Trainee trainee = getTraineeByUsername(credentialsUpdateDTO.getUsername());
         trainee.setPassword(credentialsUpdateDTO.getNewPassword());
         Trainee updatedTrainee = traineeDAO.updateTrainee(trainee);
@@ -72,7 +67,6 @@ public class TraineeService {
         trainee.setDateOfBirth(traineeUpdateDTO.getDateOfBirth());
         trainee.setAddress(traineeUpdateDTO.getAddress());
         trainee.getUser().setActive(traineeUpdateDTO.isActive());
-        authentication.authenticateUser(trainee.getUsername(), trainee.getPassword());
         Trainee updatedTrainee = traineeDAO.updateTrainee(trainee);
         log.info("Trainee successfully updated");
         return updatedTrainee;

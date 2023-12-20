@@ -20,7 +20,6 @@ import org.example.model.Trainer;
 import org.example.model.TrainingType;
 import org.example.model.User;
 import org.example.utils.CredentialsGenerator;
-import org.example.utils.UserAuthentication;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -37,9 +36,6 @@ class TrainerServiceTest {
 
     @Mock
     private CredentialsGenerator credentialsGenerator;
-
-    @Mock
-    private UserAuthentication userAuthentication;
 
     @InjectMocks
     private TrainerService trainerService;
@@ -64,8 +60,6 @@ class TrainerServiceTest {
                             .trainingTypeName(TrainingTypeName.AEROBIC)
                             .build())
                     .build();
-
-            when(userAuthentication.authenticateUser(anyString(), anyString())).thenReturn(true);
         }
     }
 
@@ -121,8 +115,6 @@ class TrainerServiceTest {
         Trainer result = trainerService.changePassword(credentialsUpdateDTO);
 
         // Assert
-        verify(userAuthentication, times(1)).authenticateUser(credentialsUpdateDTO.getUsername(),
-                credentialsUpdateDTO.getOldPassword());
         verify(trainerDAO, times(1)).updateTrainer(trainer);
         assertEquals(credentialsUpdateDTO.getNewPassword(), result.getPassword());
     }
@@ -178,7 +170,6 @@ class TrainerServiceTest {
         boolean result = trainerService.deleteTrainer(username, password);
 
         // Assert
-        verify(userAuthentication, times(1)).authenticateUser(username, password);
         verify(trainerDAO, times(1)).deleteTrainerByUsername(username);
         assertTrue(result);
     }

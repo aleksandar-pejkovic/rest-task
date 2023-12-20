@@ -15,7 +15,6 @@ import org.example.model.Trainer;
 import org.example.model.TrainingType;
 import org.example.model.User;
 import org.example.utils.CredentialsGenerator;
-import org.example.utils.UserAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,16 +31,14 @@ public class TrainerService {
 
     private final CredentialsGenerator generator;
 
-    private final UserAuthentication authentication;
-
     private final TrainingDAO trainingDAO;
 
     @Autowired
-    public TrainerService(TrainerDAO trainerDAO, TraineeDAO traineeDAO, CredentialsGenerator credentialsGenerator, UserAuthentication authentication, TrainingDAO trainingDAO) {
+    public TrainerService(TrainerDAO trainerDAO, TraineeDAO traineeDAO, CredentialsGenerator credentialsGenerator,
+                          TrainingDAO trainingDAO) {
         this.trainerDAO = trainerDAO;
         this.traineeDAO = traineeDAO;
         this.generator = credentialsGenerator;
-        this.authentication = authentication;
         this.trainingDAO = trainingDAO;
     }
 
@@ -68,7 +65,6 @@ public class TrainerService {
 
     @Transactional
     public Trainer changePassword(CredentialsUpdateDTO credentialsUpdateDTO) {
-        authentication.authenticateUser(credentialsUpdateDTO.getUsername(), credentialsUpdateDTO.getOldPassword());
         Trainer trainer = getTrainerByUsername(credentialsUpdateDTO.getUsername());
         trainer.setPassword(credentialsUpdateDTO.getNewPassword());
         Trainer updatedTrainer = trainerDAO.updateTrainer(trainer);
@@ -104,7 +100,6 @@ public class TrainerService {
 
     @Transactional
     public boolean deleteTrainer(String username, String password) {
-        authentication.authenticateUser(username, password);
         boolean deletionResult = trainerDAO.deleteTrainerByUsername(username);
         if (deletionResult) {
             log.info("Trainer successfully deleted");

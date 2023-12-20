@@ -18,7 +18,6 @@ import org.example.dto.trainee.TraineeUpdateDTO;
 import org.example.model.Trainee;
 import org.example.model.User;
 import org.example.utils.CredentialsGenerator;
-import org.example.utils.UserAuthentication;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -32,9 +31,6 @@ class TraineeServiceTest {
 
     @Mock
     private CredentialsGenerator credentialsGenerator;
-
-    @Mock
-    private UserAuthentication userAuthentication;
 
     @InjectMocks
     private TraineeService traineeService;
@@ -57,8 +53,6 @@ class TraineeServiceTest {
                     .address("11000 Belgrade")
                     .dateOfBirth(new Date())
                     .build();
-
-            when(userAuthentication.authenticateUser(anyString(), anyString())).thenReturn(true);
         }
     }
 
@@ -114,8 +108,6 @@ class TraineeServiceTest {
         Trainee result = traineeService.changePassword(credentialsUpdateDTO);
 
         // Assert
-        verify(userAuthentication, times(1)).authenticateUser(credentialsUpdateDTO.getUsername(),
-                credentialsUpdateDTO.getOldPassword());
         verify(traineeDAO, times(1)).updateTrainee(trainee);
         assertEquals(credentialsUpdateDTO.getNewPassword(), result.getPassword());
     }
@@ -138,7 +130,6 @@ class TraineeServiceTest {
         Trainee result = traineeService.updateTrainee(traineeUpdateDTO);
 
         // Assert
-        verify(userAuthentication, times(1)).authenticateUser(trainee.getUsername(), trainee.getPassword());
         verify(traineeDAO, times(1)).updateTrainee(trainee);
         assertEquals(trainee, result);
     }

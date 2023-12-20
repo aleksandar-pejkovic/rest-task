@@ -49,22 +49,21 @@ public class AppConfig {
     }
 
     @Bean
-    public TraineeService traineeService(TraineeDAO traineeDAO, CredentialsGenerator credentialsGenerator,
-                                         UserAuthentication authentication) {
-        return new TraineeService(traineeDAO, credentialsGenerator, authentication);
+    public TraineeService traineeService(TraineeDAO traineeDAO, CredentialsGenerator credentialsGenerator) {
+        return new TraineeService(traineeDAO, credentialsGenerator);
     }
 
     @Bean
-    public TrainerService trainerService(TrainerDAO trainerDAO, TraineeDAO traineeDAO, CredentialsGenerator credentialsGenerator,
-                                         UserAuthentication authentication, TrainingDAO trainingDAO) {
-        return new TrainerService(trainerDAO, traineeDAO, credentialsGenerator, authentication, trainingDAO);
+    public TrainerService trainerService(TrainerDAO trainerDAO, TraineeDAO traineeDAO,
+                                         CredentialsGenerator credentialsGenerator, TrainingDAO trainingDAO) {
+        return new TrainerService(trainerDAO, traineeDAO, credentialsGenerator, trainingDAO);
     }
 
     @Bean
     public TrainingService trainingService(TrainingDAO trainingDAO,
                                            TraineeDAO traineeDAO,
                                            TrainerDAO trainerDAO
-                                           ) {
+    ) {
         return new TrainingService(trainingDAO, traineeDAO, trainerDAO);
     }
 
