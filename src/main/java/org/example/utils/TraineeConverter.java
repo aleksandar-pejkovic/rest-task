@@ -9,7 +9,7 @@ import org.example.model.Trainee;
 
 public class TraineeConverter {
 
-    protected TraineeConverter() {
+    private TraineeConverter() {
     }
 
     public static TraineeDTO convertToDto(Trainee entity) {

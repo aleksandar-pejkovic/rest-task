@@ -9,7 +9,7 @@ import org.example.model.Trainer;
 
 public class TrainerConverter {
 
-    protected TrainerConverter() {
+    private TrainerConverter() {
     }
 
     public static TrainerDTO convertToDto(Trainer trainer) {

@@ -5,11 +5,11 @@ import lombok.Builder;
 @Builder
 public class TrainerEmbeddedDTO {
 
-    String username;
+    private String username;
 
-    String firstName;
+    private String firstName;
 
-    String lastName;
+    private String lastName;
 
-    String specialization;
+    private String specialization;
 }

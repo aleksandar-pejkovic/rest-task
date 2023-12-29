@@ -7,7 +7,7 @@ import org.example.model.Training;
 
 public class TrainingConverter {
 
-    protected TrainingConverter() {
+    private TrainingConverter() {
     }
 
     public static List<TrainingDTO> convertToDtoList(List<Training> trainings) {

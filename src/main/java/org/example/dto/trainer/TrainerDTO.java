@@ -9,15 +9,15 @@ import lombok.Builder;
 @Builder
 public class TrainerDTO {
 
-    String username;
+    private String username;
 
-    String firstName;
+    private String firstName;
 
-    String lastName;
+    private String lastName;
 
-    String specialization;
+    private String specialization;
 
-    boolean isActive;
+    private boolean isActive;
 
-    List<TraineeEmbeddedDTO> traineeEmbeddedDTOList;
+    private List<TraineeEmbeddedDTO> traineeEmbeddedDTOList;
 }

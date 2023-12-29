@@ -7,5 +7,5 @@ import lombok.Getter;
 @Getter
 public class TrainerListDTO {
 
-    List<String> trainerUsernameList;
+    private List<String> trainerUsernameList;
 }

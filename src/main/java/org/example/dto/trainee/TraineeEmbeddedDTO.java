@@ -5,10 +5,10 @@ import lombok.Builder;
 @Builder
 public class TraineeEmbeddedDTO {
 
-    String username;
+    private String username;
 
-    String firstName;
+    private String firstName;
 
-    String lastName;
+    private String lastName;
 
 }

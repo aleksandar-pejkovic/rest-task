@@ -9,13 +9,13 @@ import lombok.Getter;
 @Builder
 public class TrainerUpdateDTO {
 
-    String username;
+    private String username;
 
-    String firstName;
+    private String firstName;
 
-    String lastName;
+    private String lastName;
 
-    TrainingTypeName specialization;
+    private TrainingTypeName specialization;
 
-    boolean isActive;
+    private boolean isActive;
 }
