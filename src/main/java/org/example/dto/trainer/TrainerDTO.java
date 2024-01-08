@@ -5,7 +5,9 @@ import java.util.List;
 import org.example.dto.trainee.TraineeEmbeddedDTO;
 
 import lombok.Builder;
+import lombok.Getter;
 
+@Getter
 @Builder
 public class TrainerDTO {
 
